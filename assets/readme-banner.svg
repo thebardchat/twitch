@@ -1,0 +1,417 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 100" width="1280" height="400" shape-rendering="crispEdges" style="image-rendering:pixelated">
+<defs>
+  <filter id="glow-a"><feGaussianBlur stdDeviation="1.2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  <filter id="glow-p"><feGaussianBlur stdDeviation="1.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  <linearGradient id="bgGrad" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0%" stop-color="#07000f"/>
+    <stop offset="100%" stop-color="#0e001f"/>
+  </linearGradient>
+  <linearGradient id="groundGrad" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0%" stop-color="#1a003a"/>
+    <stop offset="100%" stop-color="#07000f"/>
+  </linearGradient>
+</defs>
+
+<!-- Background -->
+<rect width="320" height="100" fill="url(#bgGrad)"/>
+
+<!-- Scanlines -->
+<rect width="320" height="1" y="0"  fill="#000" opacity="0.3"/>
+<rect width="320" height="1" y="2"  fill="#000" opacity="0.3"/>
+<rect width="320" height="1" y="4"  fill="#000" opacity="0.3"/>
+<rect width="320" height="1" y="6"  fill="#000" opacity="0.3"/>
+<rect width="320" height="1" y="8"  fill="#000" opacity="0.3"/>
+<rect width="320" height="1" y="10" fill="#000" opacity="0.3"/>
+<rect width="320" height="1" y="12" fill="#000" opacity="0.3"/>
+<rect width="320" height="1" y="14" fill="#000" opacity="0.3"/>
+<rect width="320" height="1" y="16" fill="#000" opacity="0.3"/>
+<rect width="320" height="1" y="18" fill="#000" opacity="0.3"/>
+<rect width="320" height="1" y="20" fill="#000" opacity="0.3"/>
+<rect width="320" height="1" y="22" fill="#000" opacity="0.3"/>
+<rect width="320" height="1" y="24" fill="#000" opacity="0.3"/>
+<rect width="320" height="1" y="26" fill="#000" opacity="0.3"/>
+<rect width="320" height="1" y="28" fill="#000" opacity="0.3"/>
+<rect width="320" height="1" y="30" fill="#000" opacity="0.3"/>
+<rect width="320" height="1" y="32" fill="#000" opacity="0.3"/>
+<rect width="320" height="1" y="34" fill="#000" opacity="0.3"/>
+<rect width="320" height="1" y="36" fill="#000" opacity="0.3"/>
+<rect width="320" height="1" y="38" fill="#000" opacity="0.3"/>
+<rect width="320" height="1" y="40" fill="#000" opacity="0.3"/>
+<rect width="320" height="1" y="42" fill="#000" opacity="0.3"/>
+<rect width="320" height="1" y="44" fill="#000" opacity="0.3"/>
+<rect width="320" height="1" y="46" fill="#000" opacity="0.3"/>
+<rect width="320" height="1" y="48" fill="#000" opacity="0.3"/>
+<rect width="320" height="1" y="50" fill="#000" opacity="0.3"/>
+<rect width="320" height="1" y="52" fill="#000" opacity="0.3"/>
+<rect width="320" height="1" y="54" fill="#000" opacity="0.3"/>
+<rect width="320" height="1" y="56" fill="#000" opacity="0.3"/>
+<rect width="320" height="1" y="58" fill="#000" opacity="0.3"/>
+<rect width="320" height="1" y="60" fill="#000" opacity="0.3"/>
+<rect width="320" height="1" y="62" fill="#000" opacity="0.3"/>
+<rect width="320" height="1" y="64" fill="#000" opacity="0.3"/>
+<rect width="320" height="1" y="66" fill="#000" opacity="0.3"/>
+<rect width="320" height="1" y="68" fill="#000" opacity="0.3"/>
+<rect width="320" height="1" y="70" fill="#000" opacity="0.3"/>
+<rect width="320" height="1" y="72" fill="#000" opacity="0.3"/>
+<rect width="320" height="1" y="74" fill="#000" opacity="0.3"/>
+<rect width="320" height="1" y="76" fill="#000" opacity="0.3"/>
+<rect width="320" height="1" y="78" fill="#000" opacity="0.3"/>
+<rect width="320" height="1" y="80" fill="#000" opacity="0.3"/>
+<rect width="320" height="1" y="82" fill="#000" opacity="0.3"/>
+<rect width="320" height="1" y="84" fill="#000" opacity="0.3"/>
+<rect width="320" height="1" y="86" fill="#000" opacity="0.3"/>
+<rect width="320" height="1" y="88" fill="#000" opacity="0.3"/>
+<rect width="320" height="1" y="90" fill="#000" opacity="0.3"/>
+<rect width="320" height="1" y="92" fill="#000" opacity="0.3"/>
+<rect width="320" height="1" y="94" fill="#000" opacity="0.3"/>
+<rect width="320" height="1" y="96" fill="#000" opacity="0.3"/>
+<rect width="320" height="1" y="98" fill="#000" opacity="0.3"/>
+
+<!-- Stars — scattered pixel dots -->
+<rect x="5"   y="3"  width="1" height="1" fill="#fbbf24" opacity="0.9" filter="url(#glow-a)"/>
+<rect x="14"  y="7"  width="1" height="1" fill="#a855f7"/>
+<rect x="22"  y="2"  width="1" height="1" fill="#00e5ff" opacity="0.8"/>
+<rect x="35"  y="11" width="1" height="1" fill="#fbbf24" opacity="0.7"/>
+<rect x="44"  y="5"  width="1" height="1" fill="#fff" opacity="0.5"/>
+<rect x="58"  y="8"  width="1" height="1" fill="#a855f7" opacity="0.8"/>
+<rect x="68"  y="3"  width="1" height="1" fill="#fbbf24"/>
+<rect x="75"  y="14" width="1" height="1" fill="#00e5ff" opacity="0.6"/>
+<rect x="85"  y="6"  width="1" height="1" fill="#fff" opacity="0.4"/>
+<rect x="92"  y="2"  width="1" height="1" fill="#fbbf24" opacity="0.8"/>
+<rect x="100" y="9"  width="1" height="1" fill="#a855f7"/>
+<rect x="108" y="4"  width="1" height="1" fill="#00e5ff"/>
+<rect x="115" y="13" width="1" height="1" fill="#fff" opacity="0.5"/>
+<rect x="125" y="7"  width="1" height="1" fill="#fbbf24" opacity="0.9" filter="url(#glow-a)"/>
+<rect x="134" y="2"  width="1" height="1" fill="#a855f7"/>
+<rect x="142" y="11" width="1" height="1" fill="#00e5ff" opacity="0.7"/>
+<rect x="152" y="5"  width="1" height="1" fill="#fbbf24"/>
+<rect x="160" y="8"  width="1" height="1" fill="#fff" opacity="0.4"/>
+<rect x="170" y="3"  width="1" height="1" fill="#a855f7" opacity="0.8"/>
+<rect x="178" y="13" width="1" height="1" fill="#fbbf24" opacity="0.7"/>
+<rect x="188" y="6"  width="1" height="1" fill="#00e5ff"/>
+<rect x="196" y="2"  width="1" height="1" fill="#fff" opacity="0.5"/>
+<rect x="204" y="10" width="1" height="1" fill="#fbbf24" opacity="0.9" filter="url(#glow-a)"/>
+<rect x="212" y="4"  width="1" height="1" fill="#a855f7"/>
+<rect x="220" y="14" width="1" height="1" fill="#00e5ff" opacity="0.6"/>
+<rect x="228" y="7"  width="1" height="1" fill="#fbbf24"/>
+<rect x="236" y="3"  width="1" height="1" fill="#fff" opacity="0.4"/>
+<rect x="244" y="11" width="1" height="1" fill="#a855f7" opacity="0.8"/>
+<rect x="252" y="5"  width="1" height="1" fill="#fbbf24" opacity="0.7"/>
+<rect x="260" y="8"  width="1" height="1" fill="#00e5ff"/>
+<rect x="268" y="2"  width="1" height="1" fill="#fff" opacity="0.5"/>
+<rect x="276" y="12" width="1" height="1" fill="#fbbf24" opacity="0.9" filter="url(#glow-a)"/>
+<rect x="284" y="6"  width="1" height="1" fill="#a855f7"/>
+<rect x="292" y="3"  width="1" height="1" fill="#00e5ff" opacity="0.7"/>
+<rect x="300" y="9"  width="1" height="1" fill="#fbbf24"/>
+<rect x="308" y="4"  width="1" height="1" fill="#fff" opacity="0.4"/>
+<rect x="316" y="7"  width="1" height="1" fill="#a855f7" opacity="0.8"/>
+
+<!-- 2x2 bright stars -->
+<rect x="30"  y="18" width="2" height="2" fill="#fbbf24" filter="url(#glow-a)"/>
+<rect x="110" y="15" width="2" height="2" fill="#a855f7" filter="url(#glow-p)"/>
+<rect x="190" y="19" width="2" height="2" fill="#fbbf24" filter="url(#glow-a)"/>
+<rect x="270" y="16" width="2" height="2" fill="#00e5ff" opacity="0.9"/>
+
+<!-- Ground strip -->
+<rect x="0" y="88" width="320" height="12" fill="url(#groundGrad)"/>
+<rect x="0" y="88" width="320" height="2"  fill="#7c3aed" opacity="0.6"/>
+
+<!-- ═══ BARD CHARACTER (left area x=8..38) ═══ -->
+<!-- Lantern glow halo -->
+<rect x="22" y="20" width="20" height="20" fill="#fbbf24" opacity="0.08"/>
+<rect x="20" y="18" width="24" height="24" fill="#fbbf24" opacity="0.04"/>
+
+<!-- Lantern (x=28,y=20) 4wide 6tall -->
+<rect x="28" y="20" width="4" height="6" fill="#fbbf24"  filter="url(#glow-a)"/>
+<rect x="29" y="21" width="2" height="4" fill="#fff"     opacity="0.9"/>
+<rect x="30" y="18" width="1" height="3" fill="#d97706"/>
+<!-- lantern light rays -->
+<rect x="26" y="21" width="1" height="1" fill="#fbbf24" opacity="0.7"/>
+<rect x="33" y="21" width="1" height="1" fill="#fbbf24" opacity="0.7"/>
+<rect x="25" y="23" width="1" height="1" fill="#fbbf24" opacity="0.5"/>
+<rect x="34" y="23" width="1" height="1" fill="#fbbf24" opacity="0.5"/>
+<rect x="26" y="25" width="1" height="1" fill="#fbbf24" opacity="0.4"/>
+<rect x="33" y="25" width="1" height="1" fill="#fbbf24" opacity="0.4"/>
+<rect x="28" y="19" width="4" height="1" fill="#fbbf24" opacity="0.3"/>
+<rect x="30" y="17" width="1" height="1" fill="#fbbf24" opacity="0.3"/>
+
+<!-- Right arm holding lantern -->
+<rect x="25" y="42" width="3" height="3" fill="#e8c090"/>
+<rect x="26" y="38" width="2" height="5" fill="#e8c090"/>
+<rect x="27" y="34" width="2" height="5" fill="#e8c090"/>
+
+<!-- Hat -->
+<rect x="12" y="26" width="12" height="3" fill="#6d28d9"/>
+<rect x="14" y="23" width="8"  height="4" fill="#7c3aed"/>
+<rect x="16" y="20" width="4"  height="4" fill="#8b5cf6"/>
+<!-- hat star -->
+<rect x="17" y="18" width="2" height="2" fill="#fbbf24" filter="url(#glow-a)"/>
+<rect x="16" y="19" width="4" height="1" fill="#fbbf24" filter="url(#glow-a)"/>
+<rect x="18" y="17" width="1" height="4" fill="#fbbf24" filter="url(#glow-a)"/>
+
+<!-- Head -->
+<rect x="13" y="29" width="10" height="8" fill="#f0d0a8"/>
+<!-- Eyes -->
+<rect x="14" y="31" width="2" height="2" fill="#7c3aed"/>
+<rect x="19" y="31" width="2" height="2" fill="#7c3aed"/>
+<rect x="15" y="32" width="1" height="1" fill="#fff" opacity="0.7"/>
+<rect x="20" y="32" width="1" height="1" fill="#fff" opacity="0.7"/>
+<!-- Smile -->
+<rect x="15" y="35" width="6" height="1" fill="#c08060"/>
+<rect x="14" y="34" width="1" height="1" fill="#c08060"/>
+<rect x="21" y="34" width="1" height="1" fill="#c08060"/>
+
+<!-- Body cloak -->
+<rect x="10" y="37" width="16" height="18" fill="#7c3aed"/>
+<rect x="11" y="38" width="14" height="16" fill="#6d28d9"/>
+<!-- cloak detail lines -->
+<rect x="13" y="40" width="1" height="12" fill="#8b5cf6" opacity="0.5"/>
+<rect x="22" y="40" width="1" height="12" fill="#8b5cf6" opacity="0.5"/>
+<!-- Left arm -->
+<rect x="8"  y="38" width="3" height="3" fill="#e8c090"/>
+<rect x="8"  y="40" width="2" height="4" fill="#e8c090"/>
+
+<!-- Legs -->
+<rect x="13" y="55" width="4" height="5" fill="#4c1d95"/>
+<rect x="19" y="55" width="4" height="5" fill="#4c1d95"/>
+<!-- Shoes -->
+<rect x="12" y="59" width="5" height="2" fill="#1e1b4b"/>
+<rect x="18" y="59" width="5" height="2" fill="#1e1b4b"/>
+
+<!-- ═══ TITLE TEXT (pixel font blocks, center x=90..230) ═══ -->
+<!-- "THEBARDCHAT" in chunky pixel letters, amber glow -->
+<!-- T -->
+<rect x="90"  y="32" width="9" height="2" fill="#fbbf24" filter="url(#glow-a)"/>
+<rect x="94"  y="32" width="2" height="12" fill="#fbbf24" filter="url(#glow-a)"/>
+<!-- H -->
+<rect x="101" y="32" width="2" height="12" fill="#fbbf24" filter="url(#glow-a)"/>
+<rect x="101" y="37" width="6" height="2"  fill="#fbbf24" filter="url(#glow-a)"/>
+<rect x="105" y="32" width="2" height="12" fill="#fbbf24" filter="url(#glow-a)"/>
+<!-- E -->
+<rect x="109" y="32" width="2" height="12" fill="#fbbf24" filter="url(#glow-a)"/>
+<rect x="109" y="32" width="7" height="2"  fill="#fbbf24" filter="url(#glow-a)"/>
+<rect x="109" y="37" width="5" height="2"  fill="#fbbf24" filter="url(#glow-a)"/>
+<rect x="109" y="42" width="7" height="2"  fill="#fbbf24" filter="url(#glow-a)"/>
+<!-- B -->
+<rect x="118" y="32" width="2" height="12" fill="#a855f7" filter="url(#glow-p)"/>
+<rect x="118" y="32" width="5" height="2"  fill="#a855f7" filter="url(#glow-p)"/>
+<rect x="121" y="34" width="2" height="3"  fill="#a855f7" filter="url(#glow-p)"/>
+<rect x="118" y="37" width="5" height="2"  fill="#a855f7" filter="url(#glow-p)"/>
+<rect x="121" y="39" width="2" height="3"  fill="#a855f7" filter="url(#glow-p)"/>
+<rect x="118" y="42" width="5" height="2"  fill="#a855f7" filter="url(#glow-p)"/>
+<!-- A -->
+<rect x="125" y="34" width="2" height="10" fill="#a855f7" filter="url(#glow-p)"/>
+<rect x="125" y="32" width="6" height="2"  fill="#a855f7" filter="url(#glow-p)"/>
+<rect x="129" y="34" width="2" height="10" fill="#a855f7" filter="url(#glow-p)"/>
+<rect x="125" y="37" width="6" height="2"  fill="#a855f7" filter="url(#glow-p)"/>
+<!-- R -->
+<rect x="133" y="32" width="2" height="12" fill="#a855f7" filter="url(#glow-p)"/>
+<rect x="133" y="32" width="5" height="2"  fill="#a855f7" filter="url(#glow-p)"/>
+<rect x="136" y="34" width="2" height="3"  fill="#a855f7" filter="url(#glow-p)"/>
+<rect x="133" y="37" width="5" height="2"  fill="#a855f7" filter="url(#glow-p)"/>
+<rect x="135" y="39" width="3" height="5"  fill="#a855f7" filter="url(#glow-p)"/>
+<!-- D -->
+<rect x="140" y="32" width="2" height="12" fill="#a855f7" filter="url(#glow-p)"/>
+<rect x="140" y="32" width="4" height="2"  fill="#a855f7" filter="url(#glow-p)"/>
+<rect x="142" y="34" width="2" height="8"  fill="#a855f7" filter="url(#glow-p)"/>
+<rect x="140" y="42" width="4" height="2"  fill="#a855f7" filter="url(#glow-p)"/>
+<!-- C -->
+<rect x="148" y="32" width="2" height="12" fill="#fbbf24" filter="url(#glow-a)"/>
+<rect x="148" y="32" width="7" height="2"  fill="#fbbf24" filter="url(#glow-a)"/>
+<rect x="148" y="42" width="7" height="2"  fill="#fbbf24" filter="url(#glow-a)"/>
+<!-- H -->
+<rect x="157" y="32" width="2" height="12" fill="#fbbf24" filter="url(#glow-a)"/>
+<rect x="157" y="37" width="6" height="2"  fill="#fbbf24" filter="url(#glow-a)"/>
+<rect x="161" y="32" width="2" height="12" fill="#fbbf24" filter="url(#glow-a)"/>
+<!-- A -->
+<rect x="165" y="34" width="2" height="10" fill="#fbbf24" filter="url(#glow-a)"/>
+<rect x="165" y="32" width="6" height="2"  fill="#fbbf24" filter="url(#glow-a)"/>
+<rect x="169" y="34" width="2" height="10" fill="#fbbf24" filter="url(#glow-a)"/>
+<rect x="165" y="37" width="6" height="2"  fill="#fbbf24" filter="url(#glow-a)"/>
+<!-- T -->
+<rect x="173" y="32" width="9" height="2"  fill="#fbbf24" filter="url(#glow-a)"/>
+<rect x="177" y="32" width="2" height="12" fill="#fbbf24" filter="url(#glow-a)"/>
+
+<!-- Tagline under title — pixel dots -->
+<!-- "LOVE & LIGHT BROADCASTING" as small pixel text -->
+<rect x="96"  y="50" width="1" height="1" fill="#00e5ff" opacity="0.8"/>
+<rect x="98"  y="50" width="1" height="1" fill="#00e5ff" opacity="0.8"/>
+<rect x="100" y="50" width="1" height="1" fill="#00e5ff" opacity="0.8"/>
+<rect x="102" y="50" width="1" height="1" fill="#00e5ff" opacity="0.8"/>
+<rect x="104" y="50" width="1" height="1" fill="#00e5ff" opacity="0.8"/>
+<rect x="106" y="50" width="1" height="1" fill="#00e5ff" opacity="0.8"/>
+<rect x="108" y="50" width="1" height="1" fill="#00e5ff" opacity="0.8"/>
+<rect x="110" y="50" width="1" height="1" fill="#00e5ff" opacity="0.8"/>
+
+<!-- Sub-tagline dots forming a decorative line -->
+<rect x="90" y="50" width="100" height="1" fill="#00e5ff" opacity="0.2"/>
+
+<!-- Small pixel text: LOVE · LIGHT · LOCAL AI -->
+<!-- Using tiny 3x5 pixel font blocks -->
+<!-- L -->
+<rect x="94"  y="54" width="1" height="5" fill="#00e5ff" opacity="0.9"/>
+<rect x="94"  y="58" width="3" height="1" fill="#00e5ff" opacity="0.9"/>
+<!-- O -->
+<rect x="99"  y="54" width="3" height="1" fill="#00e5ff" opacity="0.9"/>
+<rect x="99"  y="54" width="1" height="5" fill="#00e5ff" opacity="0.9"/>
+<rect x="101" y="54" width="1" height="5" fill="#00e5ff" opacity="0.9"/>
+<rect x="99"  y="58" width="3" height="1" fill="#00e5ff" opacity="0.9"/>
+<!-- V -->
+<rect x="104" y="54" width="1" height="4" fill="#00e5ff" opacity="0.9"/>
+<rect x="106" y="54" width="1" height="4" fill="#00e5ff" opacity="0.9"/>
+<rect x="105" y="57" width="1" height="2" fill="#00e5ff" opacity="0.9"/>
+<!-- E -->
+<rect x="109" y="54" width="1" height="5" fill="#00e5ff" opacity="0.9"/>
+<rect x="109" y="54" width="3" height="1" fill="#00e5ff" opacity="0.9"/>
+<rect x="109" y="56" width="2" height="1" fill="#00e5ff" opacity="0.9"/>
+<rect x="109" y="58" width="3" height="1" fill="#00e5ff" opacity="0.9"/>
+
+<!-- dot -->
+<rect x="114" y="57" width="1" height="1" fill="#fbbf24" opacity="0.8"/>
+
+<!-- L -->
+<rect x="117" y="54" width="1" height="5" fill="#fbbf24" opacity="0.9"/>
+<rect x="117" y="58" width="3" height="1" fill="#fbbf24" opacity="0.9"/>
+<!-- I -->
+<rect x="122" y="54" width="3" height="1" fill="#fbbf24" opacity="0.9"/>
+<rect x="123" y="54" width="1" height="5" fill="#fbbf24" opacity="0.9"/>
+<rect x="122" y="58" width="3" height="1" fill="#fbbf24" opacity="0.9"/>
+<!-- G -->
+<rect x="127" y="54" width="3" height="1" fill="#fbbf24" opacity="0.9"/>
+<rect x="127" y="54" width="1" height="5" fill="#fbbf24" opacity="0.9"/>
+<rect x="127" y="58" width="3" height="1" fill="#fbbf24" opacity="0.9"/>
+<rect x="129" y="56" width="1" height="2" fill="#fbbf24" opacity="0.9"/>
+<rect x="128" y="56" width="2" height="1" fill="#fbbf24" opacity="0.9"/>
+<!-- H -->
+<rect x="132" y="54" width="1" height="5" fill="#fbbf24" opacity="0.9"/>
+<rect x="132" y="56" width="3" height="1" fill="#fbbf24" opacity="0.9"/>
+<rect x="134" y="54" width="1" height="5" fill="#fbbf24" opacity="0.9"/>
+<!-- T -->
+<rect x="137" y="54" width="3" height="1" fill="#fbbf24" opacity="0.9"/>
+<rect x="138" y="54" width="1" height="5" fill="#fbbf24" opacity="0.9"/>
+
+<!-- dot -->
+<rect x="142" y="57" width="1" height="1" fill="#a855f7" opacity="0.8"/>
+
+<!-- LOCAL AI small letters (purple) -->
+<rect x="145" y="54" width="1" height="5" fill="#a855f7" opacity="0.9"/>
+<rect x="145" y="58" width="3" height="1" fill="#a855f7" opacity="0.9"/>
+<rect x="150" y="54" width="3" height="1" fill="#a855f7" opacity="0.9"/>
+<rect x="150" y="54" width="1" height="5" fill="#a855f7" opacity="0.9"/>
+<rect x="152" y="54" width="1" height="5" fill="#a855f7" opacity="0.9"/>
+<rect x="150" y="58" width="3" height="1" fill="#a855f7" opacity="0.9"/>
+<rect x="155" y="54" width="1" height="5" fill="#a855f7" opacity="0.9"/>
+<rect x="155" y="54" width="3" height="1" fill="#a855f7" opacity="0.9"/>
+<rect x="155" y="58" width="3" height="1" fill="#a855f7" opacity="0.9"/>
+<rect x="160" y="54" width="1" height="5" fill="#a855f7" opacity="0.9"/>
+<rect x="160" y="56" width="3" height="1" fill="#a855f7" opacity="0.9"/>
+<rect x="162" y="54" width="1" height="5" fill="#a855f7" opacity="0.9"/>
+<rect x="166" y="54" width="3" height="1" fill="#a855f7" opacity="0.9"/>
+<rect x="167" y="54" width="1" height="5" fill="#a855f7" opacity="0.9"/>
+<rect x="171" y="54" width="1" height="5" fill="#a855f7" opacity="0.9"/>
+<rect x="173" y="54" width="1" height="5" fill="#a855f7" opacity="0.9"/>
+<rect x="171" y="54" width="3" height="1" fill="#a855f7" opacity="0.9"/>
+
+<!-- ═══ RIGHT SIDE — MEGA CREW BOTS (x=240..310) ═══ -->
+
+<!-- Bot 1 (Arc — amber, x=240, y=28) -->
+<rect x="240" y="28" width="12" height="10" fill="#1a003a"/>
+<rect x="241" y="29" width="10" height="8"  fill="#0e001f"/>
+<rect x="240" y="28" width="12" height="1"  fill="#fbbf24" opacity="0.8"/>
+<rect x="240" y="37" width="12" height="1"  fill="#fbbf24" opacity="0.8"/>
+<rect x="240" y="28" width="1"  height="10" fill="#fbbf24" opacity="0.8"/>
+<rect x="251" y="28" width="1"  height="10" fill="#fbbf24" opacity="0.8"/>
+<!-- Bot 1 face -->
+<rect x="242" y="30" width="3" height="3" fill="#fbbf24" filter="url(#glow-a)"/>
+<rect x="247" y="30" width="3" height="3" fill="#fbbf24" filter="url(#glow-a)"/>
+<rect x="243" y="34" width="6" height="1" fill="#fbbf24" opacity="0.6"/>
+<!-- Bot 1 antenna -->
+<rect x="245" y="26" width="2" height="3" fill="#fbbf24"/>
+<rect x="244" y="24" width="4" height="2" fill="#fbbf24" filter="url(#glow-a)"/>
+<!-- Bot 1 legs -->
+<rect x="242" y="38" width="3" height="4" fill="#150030"/>
+<rect x="247" y="38" width="3" height="4" fill="#150030"/>
+
+<!-- Bot 2 (Blaze — purple, x=256, y=24) -->
+<rect x="256" y="24" width="12" height="10" fill="#1a003a"/>
+<rect x="257" y="25" width="10" height="8"  fill="#0e001f"/>
+<rect x="256" y="24" width="12" height="1"  fill="#a855f7" opacity="0.8"/>
+<rect x="256" y="33" width="12" height="1"  fill="#a855f7" opacity="0.8"/>
+<rect x="256" y="24" width="1"  height="10" fill="#a855f7" opacity="0.8"/>
+<rect x="267" y="24" width="1"  height="10" fill="#a855f7" opacity="0.8"/>
+<!-- Bot 2 face -->
+<rect x="258" y="26" width="3" height="3" fill="#a855f7" filter="url(#glow-p)"/>
+<rect x="263" y="26" width="3" height="3" fill="#a855f7" filter="url(#glow-p)"/>
+<rect x="259" y="30" width="5" height="1" fill="#a855f7" opacity="0.6"/>
+<!-- Bot 2 antenna -->
+<rect x="261" y="22" width="2" height="3" fill="#a855f7"/>
+<rect x="260" y="20" width="4" height="2" fill="#a855f7" filter="url(#glow-p)"/>
+<!-- Bot 2 legs -->
+<rect x="258" y="34" width="3" height="4" fill="#150030"/>
+<rect x="263" y="34" width="3" height="4" fill="#150030"/>
+
+<!-- Bot 3 (Flux — cyan, x=272, y=30) -->
+<rect x="272" y="30" width="12" height="10" fill="#1a003a"/>
+<rect x="273" y="31" width="10" height="8"  fill="#0e001f"/>
+<rect x="272" y="30" width="12" height="1"  fill="#00e5ff" opacity="0.8"/>
+<rect x="272" y="39" width="12" height="1"  fill="#00e5ff" opacity="0.8"/>
+<rect x="272" y="30" width="1"  height="10" fill="#00e5ff" opacity="0.8"/>
+<rect x="283" y="30" width="1"  height="10" fill="#00e5ff" opacity="0.8"/>
+<!-- Bot 3 face -->
+<rect x="274" y="32" width="3" height="3" fill="#00e5ff" opacity="0.9"/>
+<rect x="279" y="32" width="3" height="3" fill="#00e5ff" opacity="0.9"/>
+<rect x="275" y="36" width="5" height="1" fill="#00e5ff" opacity="0.5"/>
+<!-- Bot 3 antenna -->
+<rect x="277" y="28" width="2" height="3" fill="#00e5ff"/>
+<rect x="276" y="26" width="4" height="2" fill="#00e5ff" opacity="0.9"/>
+<!-- Bot 3 legs -->
+<rect x="274" y="40" width="3" height="4" fill="#150030"/>
+<rect x="279" y="40" width="3" height="4" fill="#150030"/>
+
+<!-- Bot 4 (Gemini — pink, x=288, y=26) -->
+<rect x="288" y="26" width="12" height="10" fill="#1a003a"/>
+<rect x="289" y="27" width="10" height="8"  fill="#0e001f"/>
+<rect x="288" y="26" width="12" height="1"  fill="#ff00aa" opacity="0.8"/>
+<rect x="288" y="35" width="12" height="1"  fill="#ff00aa" opacity="0.8"/>
+<rect x="288" y="26" width="1"  height="10" fill="#ff00aa" opacity="0.8"/>
+<rect x="299" y="26" width="1"  height="10" fill="#ff00aa" opacity="0.8"/>
+<!-- Bot 4 face -->
+<rect x="290" y="28" width="3" height="3" fill="#ff00aa" opacity="0.9"/>
+<rect x="295" y="28" width="3" height="3" fill="#ff00aa" opacity="0.9"/>
+<rect x="291" y="32" width="5" height="1" fill="#ff00aa" opacity="0.5"/>
+<!-- Bot 4 antenna -->
+<rect x="293" y="24" width="2" height="3" fill="#ff00aa"/>
+<rect x="292" y="22" width="4" height="2" fill="#ff00aa" opacity="0.9"/>
+<!-- Bot 4 legs -->
+<rect x="290" y="36" width="3" height="4" fill="#150030"/>
+<rect x="295" y="36" width="3" height="4" fill="#150030"/>
+
+<!-- Connection lines between bots (very subtle) -->
+<rect x="252" y="33" width="4" height="1" fill="#7c3aed" opacity="0.3"/>
+<rect x="268" y="33" width="4" height="1" fill="#7c3aed" opacity="0.3"/>
+<rect x="284" y="33" width="4" height="1" fill="#7c3aed" opacity="0.3"/>
+
+<!-- Bottom border bar — pixel stripe -->
+<rect x="0"   y="86" width="320" height="2" fill="#7c3aed" opacity="0.8"/>
+<rect x="0"   y="86" width="80"  height="2" fill="#fbbf24"/>
+<rect x="80"  y="86" width="80"  height="2" fill="#a855f7"/>
+<rect x="160" y="86" width="80"  height="2" fill="#00e5ff"/>
+<rect x="240" y="86" width="80"  height="2" fill="#ff00aa"/>
+
+<!-- TWITCH.TV/THEBARDCHAT label at bottom -->
+<rect x="0" y="90" width="320" height="10" fill="#0e001f" opacity="0.6"/>
+<!-- pixel dots forming URL hint -->
+<rect x="100" y="93" width="120" height="1" fill="#fbbf24" opacity="0.15"/>
+
+<!-- CRT corner vignette -->
+<rect x="0"   y="0"  width="8"  height="8"  fill="#000" opacity="0.6"/>
+<rect x="312" y="0"  width="8"  height="8"  fill="#000" opacity="0.6"/>
+<rect x="0"   y="92" width="8"  height="8"  fill="#000" opacity="0.6"/>
+<rect x="312" y="92" width="8"  height="8"  fill="#000" opacity="0.6"/>
+
+<!-- CRT outer glow border -->
+<rect x="0" y="0"   width="320" height="2" fill="#7c3aed" opacity="0.5"/>
+<rect x="0" y="98"  width="320" height="2" fill="#7c3aed" opacity="0.5"/>
+<rect x="0" y="0"   width="2"   height="100" fill="#7c3aed" opacity="0.5"/>
+<rect x="318" y="0" width="2"   height="100" fill="#7c3aed" opacity="0.5"/>
+</svg>

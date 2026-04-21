@@ -1,5 +1,7 @@
 # thebardchat on Twitch — Love & Light Broadcasting
 
+![thebardchat banner](assets/readme-banner.svg)
+
 > **Try Claude free for 2 weeks** — the AI powering this entire ecosystem. [Start your free trial →](https://claude.ai/referral/4fAMYN9Ing)
 
 ---
