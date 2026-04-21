@@ -53,6 +53,8 @@ twitch/
 ├── bot/
 │   ├── bot.py              # Twitch chat bot (twitchio Python)
 │   └── commands.py         # !shanebrain, !sobriety, !love, !crew, !book
+├── discord/
+│   └── README.md           # Discord server guide — channels, roles, bot commands, go-live alerts
 ├── alerts/
 │   ├── go-live.html        # Go-live Discord + social notification trigger
 │   └── overlay.html        # OBS browser source overlay (1920x1080)
