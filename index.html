@@ -1,0 +1,1010 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>thebardchat — Love & Light on Twitch</title>
+  <meta name="description" content="A family streaming channel on Twitch. AI demos, family gaming, honest conversations. No toxicity. Just love and light.">
+  <meta property="og:title" content="thebardchat — Love & Light on Twitch">
+  <meta property="og:description" content="A family streaming channel. Real people. Real AI. Real community.">
+  <meta property="og:image" content="https://thebardchat.github.io/twitch/og-banner.png">
+  <meta property="og:url" content="https://thebardchat.github.io/twitch/">
+  <meta name="twitter:card" content="summary_large_image">
+  <style>
+    :root {
+      --amber: #f59e0b;
+      --amber-light: #fbbf24;
+      --amber-dark: #d97706;
+      --purple: #7c3aed;
+      --purple-light: #8b5cf6;
+      --purple-glow: rgba(124,58,237,0.3);
+      --warm-dark: #1a0a2e;
+      --warm-mid: #2d1458;
+      --warm-card: rgba(255,255,255,0.06);
+      --warm-border: rgba(245,158,11,0.2);
+      --text: #f3f0ff;
+      --text-muted: #c4b8e0;
+      --twitch: #9146ff;
+      --discord: #5865f2;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--warm-dark);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── ANIMATED BACKGROUND ── */
+    .bg-stars {
+      position: fixed; inset: 0; pointer-events: none; z-index: 0;
+      overflow: hidden;
+    }
+    .bg-stars::before {
+      content: '';
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 50% -10%, rgba(124,58,237,0.4) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 40% at 80% 80%, rgba(245,158,11,0.15) 0%, transparent 50%),
+        radial-gradient(ellipse 40% 30% at 10% 70%, rgba(124,58,237,0.2) 0%, transparent 50%);
+    }
+
+    /* Floating light particles */
+    .particle {
+      position: absolute;
+      border-radius: 50%;
+      animation: float linear infinite;
+      pointer-events: none;
+    }
+    @keyframes float {
+      0% { transform: translateY(100vh) scale(0); opacity: 0; }
+      10% { opacity: 1; }
+      90% { opacity: 0.6; }
+      100% { transform: translateY(-10vh) scale(1); opacity: 0; }
+    }
+
+    /* ── LAYOUT ── */
+    .container {
+      position: relative; z-index: 1;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 80px 24px 40px;
+      position: relative;
+    }
+
+    /* Main SVG art — the bard with light */
+    .hero-art {
+      width: 280px;
+      height: 280px;
+      margin-bottom: 32px;
+      filter: drop-shadow(0 0 40px rgba(245,158,11,0.5));
+      animation: hero-glow 4s ease-in-out infinite alternate;
+    }
+    @keyframes hero-glow {
+      from { filter: drop-shadow(0 0 30px rgba(245,158,11,0.4)); }
+      to   { filter: drop-shadow(0 0 60px rgba(124,58,237,0.7)); }
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(145,70,255,0.2);
+      border: 1px solid rgba(145,70,255,0.4);
+      border-radius: 100px;
+      padding: 6px 16px;
+      font-size: 13px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: #c4b8ff;
+      margin-bottom: 20px;
+    }
+    .live-dot {
+      width: 8px; height: 8px;
+      background: #ef4444;
+      border-radius: 50%;
+      animation: pulse-red 1.5s ease-in-out infinite;
+    }
+    @keyframes pulse-red {
+      0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(239,68,68,0.6); }
+      50% { opacity: 0.8; box-shadow: 0 0 0 6px rgba(239,68,68,0); }
+    }
+
+    .hero h1 {
+      font-size: clamp(2.5rem, 6vw, 4.5rem);
+      font-weight: 800;
+      line-height: 1.1;
+      margin-bottom: 16px;
+      background: linear-gradient(135deg, var(--amber-light) 0%, #fff 40%, var(--purple-light) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-tagline {
+      font-size: clamp(1rem, 2.5vw, 1.3rem);
+      color: var(--text-muted);
+      max-width: 540px;
+      line-height: 1.6;
+      margin-bottom: 40px;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 28px;
+      border-radius: 100px;
+      font-size: 15px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s;
+      cursor: pointer;
+      border: none;
+    }
+    .btn-twitch {
+      background: var(--twitch);
+      color: white;
+      box-shadow: 0 4px 24px rgba(145,70,255,0.4);
+    }
+    .btn-twitch:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(145,70,255,0.6); }
+    .btn-ghost {
+      background: var(--warm-card);
+      border: 1px solid var(--warm-border);
+      color: var(--amber-light);
+      backdrop-filter: blur(8px);
+    }
+    .btn-ghost:hover { background: rgba(245,158,11,0.15); border-color: var(--amber); transform: translateY(-2px); }
+    .btn-claude {
+      background: linear-gradient(135deg, #ff6b00, #f59e0b);
+      color: white;
+      box-shadow: 0 4px 24px rgba(255,107,0,0.3);
+    }
+    .btn-claude:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(255,107,0,0.5); }
+
+    .scroll-hint {
+      margin-top: 60px;
+      color: var(--text-muted);
+      font-size: 13px;
+      animation: bounce 2s ease-in-out infinite;
+    }
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(8px); }
+    }
+
+    /* ── SECTION ── */
+    section {
+      padding: 80px 0;
+    }
+    .section-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--amber);
+      margin-bottom: 12px;
+    }
+    .section-label::before {
+      content: '';
+      display: block;
+      width: 24px; height: 2px;
+      background: var(--amber);
+    }
+    h2 {
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 800;
+      margin-bottom: 16px;
+      line-height: 1.2;
+    }
+    .section-sub {
+      color: var(--text-muted);
+      font-size: 1.05rem;
+      line-height: 1.6;
+      max-width: 560px;
+      margin-bottom: 48px;
+    }
+
+    /* ── ABOUT PILLARS ── */
+    .pillars-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+    }
+    .pillar {
+      background: var(--warm-card);
+      border: 1px solid var(--warm-border);
+      border-radius: 16px;
+      padding: 24px;
+      backdrop-filter: blur(8px);
+      transition: transform 0.2s, border-color 0.2s;
+    }
+    .pillar:hover { transform: translateY(-4px); border-color: var(--amber-dark); }
+    .pillar-icon {
+      font-size: 32px;
+      margin-bottom: 12px;
+      display: block;
+    }
+    .pillar h3 {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: var(--amber-light);
+    }
+    .pillar p {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* ── SCHEDULE ── */
+    .schedule-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+    }
+    .schedule-card {
+      background: var(--warm-card);
+      border: 1px solid var(--warm-border);
+      border-radius: 16px;
+      padding: 24px;
+      backdrop-filter: blur(8px);
+      position: relative;
+      overflow: hidden;
+    }
+    .schedule-card.active {
+      border-color: var(--purple-light);
+      background: rgba(124,58,237,0.12);
+    }
+    .schedule-card.active::before {
+      content: 'RECURRING';
+      position: absolute;
+      top: 12px; right: 12px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      color: var(--purple-light);
+      background: rgba(124,58,237,0.2);
+      padding: 3px 8px;
+      border-radius: 100px;
+    }
+    .schedule-day {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--amber);
+      margin-bottom: 8px;
+    }
+    .schedule-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    .schedule-desc {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* ── COMMANDS ── */
+    .commands-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 12px;
+    }
+    .command-card {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      background: var(--warm-card);
+      border: 1px solid var(--warm-border);
+      border-radius: 12px;
+      padding: 16px 20px;
+      backdrop-filter: blur(8px);
+      transition: border-color 0.2s;
+    }
+    .command-card:hover { border-color: var(--amber-dark); }
+    .command-tag {
+      font-family: 'Courier New', monospace;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--amber-light);
+      background: rgba(245,158,11,0.12);
+      padding: 4px 10px;
+      border-radius: 6px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .command-desc {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+      padding-top: 3px;
+    }
+
+    /* ── SOCIAL SIDE PANEL ── */
+    .social-row {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .social-card {
+      flex: 1;
+      min-width: 220px;
+      background: var(--warm-card);
+      border: 1px solid var(--warm-border);
+      border-radius: 16px;
+      padding: 28px 24px;
+      text-align: center;
+      text-decoration: none;
+      color: var(--text);
+      backdrop-filter: blur(8px);
+      transition: transform 0.2s, border-color 0.2s;
+    }
+    .social-card:hover { transform: translateY(-4px); }
+    .social-card.twitch:hover { border-color: var(--twitch); }
+    .social-card.discord:hover { border-color: var(--discord); }
+    .social-card.github:hover { border-color: var(--amber); }
+    .social-icon {
+      font-size: 40px;
+      margin-bottom: 12px;
+      display: block;
+    }
+    .social-card h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 6px; }
+    .social-card p { font-size: 0.85rem; color: var(--text-muted); line-height: 1.4; }
+
+    /* ── AI SECTION ── */
+    .ai-showcase {
+      background: linear-gradient(135deg, rgba(124,58,237,0.15), rgba(245,158,11,0.08));
+      border: 1px solid rgba(124,58,237,0.3);
+      border-radius: 24px;
+      padding: 48px;
+      display: flex;
+      gap: 48px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .ai-art { flex-shrink: 0; }
+    .ai-text { flex: 1; min-width: 260px; }
+    .ai-text h2 { margin-bottom: 12px; }
+    .ai-text p { color: var(--text-muted); line-height: 1.6; margin-bottom: 20px; }
+    .ai-stats {
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+    .ai-stat { text-align: center; }
+    .ai-stat .num {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--amber-light);
+      display: block;
+    }
+    .ai-stat .label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* ── REFERRAL BANNER ── */
+    .claude-banner {
+      background: linear-gradient(135deg, rgba(255,107,0,0.15), rgba(245,158,11,0.1));
+      border: 1px solid rgba(255,107,0,0.3);
+      border-radius: 16px;
+      padding: 24px 32px;
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      flex-wrap: wrap;
+      margin-top: 48px;
+    }
+    .claude-banner-text { flex: 1; min-width: 200px; }
+    .claude-banner-text strong { color: var(--amber-light); font-size: 1.05rem; display: block; margin-bottom: 4px; }
+    .claude-banner-text span { font-size: 0.875rem; color: var(--text-muted); }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--warm-border);
+      padding: 40px 0;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.875rem;
+    }
+    footer a { color: var(--amber-light); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+
+    /* ── STICKY CLAUDE STRIP ── */
+    .claude-strip {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      z-index: 100;
+      background: linear-gradient(90deg, rgba(255,107,0,0.95), rgba(245,158,11,0.95));
+      padding: 10px 20px;
+      text-align: center;
+      font-size: 13px;
+      font-weight: 600;
+      color: #1a0a00;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      backdrop-filter: blur(8px);
+    }
+    .claude-strip a { color: #1a0a00; font-weight: 800; text-decoration: underline; }
+    .claude-strip-close {
+      position: absolute; right: 16px;
+      cursor: pointer; font-size: 16px; opacity: 0.7;
+      background: none; border: none; color: #1a0a00;
+    }
+
+    @media (max-width: 640px) {
+      .hero h1 { font-size: 2.2rem; }
+      .hero-art { width: 200px; height: 200px; }
+      .ai-showcase { padding: 28px; gap: 28px; }
+      .hero-actions { flex-direction: column; align-items: center; }
+      .btn { width: 100%; max-width: 300px; justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Animated background -->
+<div class="bg-stars" id="bgStars"></div>
+
+<!-- Sticky Claude Strip -->
+<div class="claude-strip" id="claudeStrip">
+  ✨ This whole channel runs on local AI — and Claude helped build it.
+  <a href="https://claude.ai/referral/4fAMYN9Ing" target="_blank" rel="noopener">Try Claude free for 2 weeks →</a>
+  <button class="claude-strip-close" onclick="document.getElementById('claudeStrip').style.display='none'">✕</button>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="container">
+
+    <!-- Hero SVG Art — Bard holding a lantern, light radiating outward -->
+    <svg class="hero-art" viewBox="0 0 280 280" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="thebardchat logo — a figure holding a lantern of light">
+      <defs>
+        <radialGradient id="bgGrad" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#2d1458"/>
+          <stop offset="100%" stop-color="#1a0a2e"/>
+        </radialGradient>
+        <radialGradient id="lightGrad" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#fbbf24" stop-opacity="0.9"/>
+          <stop offset="60%" stop-color="#f59e0b" stop-opacity="0.4"/>
+          <stop offset="100%" stop-color="#f59e0b" stop-opacity="0"/>
+        </radialGradient>
+        <radialGradient id="glowOuter" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#7c3aed" stop-opacity="0.3"/>
+          <stop offset="100%" stop-color="#7c3aed" stop-opacity="0"/>
+        </radialGradient>
+        <filter id="glow">
+          <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+          <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+        <filter id="softGlow">
+          <feGaussianBlur stdDeviation="8" result="coloredBlur"/>
+          <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+        <linearGradient id="figureGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#c4b8e0"/>
+          <stop offset="100%" stop-color="#7c3aed"/>
+        </linearGradient>
+        <linearGradient id="lanternGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#fde68a"/>
+          <stop offset="100%" stop-color="#d97706"/>
+        </linearGradient>
+      </defs>
+
+      <!-- Background circle -->
+      <circle cx="140" cy="140" r="135" fill="url(#bgGrad)" stroke="#7c3aed" stroke-width="1.5" stroke-opacity="0.4"/>
+
+      <!-- Outer glow ring -->
+      <circle cx="140" cy="140" r="130" fill="url(#glowOuter)"/>
+
+      <!-- Light rays from lantern -->
+      <g transform="translate(178, 108)" opacity="0.6" filter="url(#softGlow)">
+        <!-- 8 light rays -->
+        <line x1="0" y1="0" x2="38" y2="-20" stroke="#fbbf24" stroke-width="1.5" stroke-linecap="round" opacity="0.8"/>
+        <line x1="0" y1="0" x2="42" y2="2"  stroke="#fbbf24" stroke-width="1.5" stroke-linecap="round" opacity="0.9"/>
+        <line x1="0" y1="0" x2="36" y2="22" stroke="#fbbf24" stroke-width="1.5" stroke-linecap="round" opacity="0.7"/>
+        <line x1="0" y1="0" x2="16" y2="36" stroke="#fbbf24" stroke-width="1.5" stroke-linecap="round" opacity="0.6"/>
+        <line x1="0" y1="0" x2="-16" y2="38" stroke="#fbbf24" stroke-width="1" stroke-linecap="round" opacity="0.4"/>
+        <line x1="0" y1="0" x2="20" y2="-38" stroke="#fbbf24" stroke-width="1" stroke-linecap="round" opacity="0.5"/>
+        <line x1="0" y1="0" x2="-8" y2="-40" stroke="#fbbf24" stroke-width="1" stroke-linecap="round" opacity="0.3"/>
+        <line x1="0" y1="0" x2="8" y2="44" stroke="#fbbf24" stroke-width="1" stroke-linecap="round" opacity="0.5"/>
+      </g>
+
+      <!-- Lantern glow pool -->
+      <ellipse cx="178" cy="108" rx="50" ry="50" fill="url(#lightGrad)" filter="url(#softGlow)"/>
+
+      <!-- Figure — body (cloak) -->
+      <path d="M110 195 Q118 160 130 148 Q136 144 140 144 Q144 144 150 148 Q162 160 170 195 Q155 202 140 203 Q125 202 110 195Z"
+            fill="url(#figureGrad)" stroke="#8b5cf6" stroke-width="1"/>
+
+      <!-- Figure — robe detail -->
+      <path d="M122 192 Q130 168 140 162 Q150 168 158 192" stroke="#c4b8e0" stroke-width="0.8" fill="none" opacity="0.4"/>
+
+      <!-- Figure — head -->
+      <circle cx="140" cy="132" r="14" fill="#c4b8e0" stroke="#8b5cf6" stroke-width="1.5"/>
+
+      <!-- Figure — face features -->
+      <circle cx="136" cy="131" r="1.5" fill="#7c3aed"/>
+      <circle cx="144" cy="131" r="1.5" fill="#7c3aed"/>
+      <path d="M136 136 Q140 139 144 136" stroke="#7c3aed" stroke-width="1" fill="none" stroke-linecap="round"/>
+
+      <!-- Figure — hat (bard hat) -->
+      <path d="M126 122 Q130 108 140 106 Q150 108 154 122 Q148 119 140 119 Q132 119 126 122Z"
+            fill="#7c3aed" stroke="#8b5cf6" stroke-width="1"/>
+      <line x1="140" y1="106" x2="148" y2="92" stroke="#fbbf24" stroke-width="2" stroke-linecap="round" filter="url(#glow)"/>
+      <circle cx="148" cy="91" r="4" fill="#fbbf24" filter="url(#glow)"/>
+
+      <!-- Arm holding lantern (right arm raised) -->
+      <path d="M152 152 Q162 140 170 120" stroke="#c4b8e0" stroke-width="5" stroke-linecap="round" fill="none"/>
+
+      <!-- Lantern -->
+      <g transform="translate(165, 105)" filter="url(#glow)">
+        <!-- Lantern body -->
+        <rect x="-8" y="0" width="16" height="20" rx="3" fill="url(#lanternGrad)" stroke="#f59e0b" stroke-width="1"/>
+        <!-- Lantern glow inside -->
+        <rect x="-5" y="3" width="10" height="14" rx="2" fill="#fef3c7" opacity="0.9"/>
+        <!-- Lantern top hook -->
+        <line x1="0" y1="0" x2="0" y2="-8" stroke="#d97706" stroke-width="2" stroke-linecap="round"/>
+        <!-- Lantern bottom -->
+        <line x1="-4" y1="20" x2="4" y2="20" stroke="#d97706" stroke-width="1.5" stroke-linecap="round"/>
+        <!-- Lantern shine -->
+        <circle cx="-2" cy="8" r="2" fill="white" opacity="0.7"/>
+      </g>
+
+      <!-- Left arm (at rest) -->
+      <path d="M128 152 Q118 162 115 170" stroke="#c4b8e0" stroke-width="4" stroke-linecap="round" fill="none"/>
+
+      <!-- Stars/sparkles scattered around -->
+      <g filter="url(#glow)">
+        <path d="M60 60 L62 54 L64 60 L70 62 L64 64 L62 70 L60 64 L54 62Z" fill="#fbbf24" opacity="0.7" transform="scale(0.7) translate(20,20)"/>
+        <path d="M220 55 L221.5 51 L223 55 L227 56.5 L223 58 L221.5 62 L220 58 L216 56.5Z" fill="#fbbf24" opacity="0.6"/>
+        <path d="M45 160 L46 157 L47 160 L50 161 L47 162 L46 165 L45 162 L42 161Z" fill="#c4b8e0" opacity="0.5"/>
+        <path d="M240 170 L241 167 L242 170 L245 171 L242 172 L241 175 L240 172 L237 171Z" fill="#8b5cf6" opacity="0.6"/>
+        <path d="M80 210 L81 208 L82 210 L84 211 L82 212 L81 214 L80 212 L78 211Z" fill="#fbbf24" opacity="0.4"/>
+        <path d="M195 220 L196 218 L197 220 L199 221 L197 222 L196 224 L195 222 L193 221Z" fill="#c4b8e0" opacity="0.4"/>
+      </g>
+
+      <!-- Bottom text arc -->
+      <path id="arcText" d="M 45 200 A 110 110 0 0 0 235 200" fill="none"/>
+      <text font-size="11" fill="#c4b8e0" opacity="0.7" letter-spacing="2" font-weight="600">
+        <textPath href="#arcText" startOffset="10%">LOVE · LIGHT · LOCAL AI · FAMILY</textPath>
+      </text>
+
+      <!-- Channel name -->
+      <text x="140" y="248" text-anchor="middle" font-size="14" font-weight="800" fill="#fbbf24" letter-spacing="1" filter="url(#glow)">thebardchat</text>
+    </svg>
+
+    <div class="hero-badge">
+      <span class="live-dot"></span>
+      twitch.tv/thebardchat
+    </div>
+
+    <h1>Love &amp; Light<br>Broadcasting</h1>
+    <p class="hero-tagline">
+      A family streaming channel where AI is human, faith is real, and the community actually matters.
+      No toxicity. Just the Brazelton crew doing the thing.
+    </p>
+
+    <div class="hero-actions">
+      <a href="https://twitch.tv/thebardchat" class="btn btn-twitch" target="_blank" rel="noopener">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M2.149 0L.537 4.119v16.836h5.731V24h3.224l3.045-3.045h4.657l6.269-6.269V0H2.149zm19.164 13.612l-3.582 3.582H13.09l-3.045 3.045v-3.045H5.269V2.149h16.044v11.463zM13.582 4.716h2.149v6.448h-2.149zm-5.73 0h2.149v6.448H7.852z"/></svg>
+        Watch on Twitch
+      </a>
+      <a href="https://github.com/thebardchat/twitch" class="btn btn-ghost" target="_blank" rel="noopener">
+        View the Code →
+      </a>
+      <a href="https://claude.ai/referral/4fAMYN9Ing" class="btn btn-claude" target="_blank" rel="noopener">
+        ✨ Try Claude Free
+      </a>
+    </div>
+
+    <p class="scroll-hint">↓ See the full vision</p>
+  </div>
+</div>
+
+<!-- ABOUT — Nine Pillars -->
+<section>
+  <div class="container">
+    <div class="section-label">What We're About</div>
+    <h2>Nine Pillars of<br>This Channel</h2>
+    <p class="section-sub">This isn't a content strategy. It's a belief system. Every stream, every decision runs through this.</p>
+
+    <div class="pillars-grid">
+      <div class="pillar">
+        <span class="pillar-icon">🙏</span>
+        <h3>Faith</h3>
+        <p>Streaming from purpose, not performance. Open to all, preachy to none.</p>
+      </div>
+      <div class="pillar">
+        <span class="pillar-icon">👨‍👦</span>
+        <h3>Family</h3>
+        <p>The Brazelton family streams here. Each one gets space to be exactly who they are.</p>
+      </div>
+      <div class="pillar">
+        <span class="pillar-icon">✨</span>
+        <h3>Sobriety</h3>
+        <p>Shane has been sober since 11/27/2023. We live the example without lecturing anyone.</p>
+      </div>
+      <div class="pillar">
+        <span class="pillar-icon">💛</span>
+        <h3>Love & Light</h3>
+        <p>Deliberate counter-culture against Twitch toxicity. We mod hard and welcome warmly.</p>
+      </div>
+      <div class="pillar">
+        <span class="pillar-icon">🎙️</span>
+        <h3>Authenticity</h3>
+        <p>No fake hype. If it's boring, it's boring. Viewers come for real people.</p>
+      </div>
+      <div class="pillar">
+        <span class="pillar-icon">🖥️</span>
+        <h3>Local AI</h3>
+        <p>Every AI on this stream runs on a Raspberry Pi 5 in Shane's home. Sovereign. Private. Real.</p>
+      </div>
+      <div class="pillar">
+        <span class="pillar-icon">🌍</span>
+        <h3>The Left-Behind</h3>
+        <p>Built for the 800M people Big Tech is ignoring. The demos here are for them.</p>
+      </div>
+      <div class="pillar">
+        <span class="pillar-icon">🤝</span>
+        <h3>Community</h3>
+        <p>Viewers aren't metrics. We remember names. The Discord is real, not a funnel.</p>
+      </div>
+      <div class="pillar">
+        <span class="pillar-icon">🎯</span>
+        <h3>Purpose</h3>
+        <p>Every stream serves something. Family always comes first — no apology needed.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STREAM SCHEDULE -->
+<section>
+  <div class="container">
+    <div class="section-label">When We Stream</div>
+    <h2>Stream Schedule</h2>
+    <p class="section-sub">Flexible by design — life comes first. Follow on Twitch for live notifications when we go live.</p>
+
+    <div class="schedule-grid">
+      <div class="schedule-card active">
+        <div class="schedule-day">Weekly · Evenings CST</div>
+        <div class="schedule-title">ShaneBrain Live</div>
+        <p class="schedule-desc">Building something with AI in real time. Viewers suggest features. Watch a Pi 5 do things the cloud charges $100/month for.</p>
+      </div>
+      <div class="schedule-card active">
+        <div class="schedule-day">Monthly</div>
+        <div class="schedule-title">Family Takeover</div>
+        <p class="schedule-desc">The boys run the show. Dad just watches. Anything can happen — that's the point.</p>
+      </div>
+      <div class="schedule-card active">
+        <div class="schedule-day">Bi-Weekly</div>
+        <div class="schedule-title">Noir Night</div>
+        <p class="schedule-desc">Live readings from "You Probably Think This Book Is About You" — Shane's published noir vignette collection.</p>
+      </div>
+      <div class="schedule-card">
+        <div class="schedule-day">Monthly</div>
+        <div class="schedule-title">Love & Light Fridays</div>
+        <p class="schedule-desc">No games. Just honest conversation, community Q&amp;A, and whatever needs to be said.</p>
+      </div>
+      <div class="schedule-card">
+        <div class="schedule-day">Monthly</div>
+        <div class="schedule-title">Local AI School</div>
+        <p class="schedule-desc">Teaching viewers to run their own AI with no cloud, no subscription, no tech degree required.</p>
+      </div>
+      <div class="schedule-card">
+        <div class="schedule-day">Special Events</div>
+        <div class="schedule-title">Sobriety Milestones</div>
+        <p class="schedule-desc">Every 100 days sober — a special stream to celebrate the journey. Community shows up.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BOT COMMANDS -->
+<section>
+  <div class="container">
+    <div class="section-label">In The Chat</div>
+    <h2>Bot Commands</h2>
+    <p class="section-sub">The chat bot is powered by local AI running on Shane's Pi 5 — everything is on-device, no cloud APIs in the loop.</p>
+
+    <div class="commands-grid">
+      <div class="command-card">
+        <span class="command-tag">!shanebrain</span>
+        <p class="command-desc">Ask the local AI anything — answered by the Ollama cluster in Shane's home network.</p>
+      </div>
+      <div class="command-card">
+        <span class="command-tag">!sobriety</span>
+        <p class="command-desc">Live count of days Shane has been sober (since 11/27/2023).</p>
+      </div>
+      <div class="command-card">
+        <span class="command-tag">!love</span>
+        <p class="command-desc">Random love-and-light quote pulled from the ShaneBrain knowledge base.</p>
+      </div>
+      <div class="command-card">
+        <span class="command-tag">!crew</span>
+        <p class="command-desc">Meet the MEGA Crew — the 17 AI bots running in Docker containers powering this stream.</p>
+      </div>
+      <div class="command-card">
+        <span class="command-tag">!book</span>
+        <p class="command-desc">Info on Shane's published noir vignette book + Amazon link.</p>
+      </div>
+      <div class="command-card">
+        <span class="command-tag">!clip</span>
+        <p class="command-desc">Creates a clip of the last 60 seconds via the Twitch API.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- AI SHOWCASE -->
+<section>
+  <div class="container">
+    <div class="ai-showcase">
+      <!-- AI SVG Art — MEGA Crew bot constellation -->
+      <div class="ai-art">
+        <svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="MEGA Crew AI bot constellation">
+          <defs>
+            <radialGradient id="botGlow" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#7c3aed" stop-opacity="0.5"/>
+              <stop offset="100%" stop-color="#7c3aed" stop-opacity="0"/>
+            </radialGradient>
+            <filter id="botFilter">
+              <feGaussianBlur stdDeviation="3" result="blur"/>
+              <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+          </defs>
+
+          <!-- Background glow -->
+          <circle cx="100" cy="100" r="95" fill="url(#botGlow)"/>
+
+          <!-- Connection lines between bots -->
+          <g stroke="#7c3aed" stroke-width="0.8" stroke-opacity="0.4">
+            <line x1="100" y1="100" x2="100" y2="30"/>
+            <line x1="100" y1="100" x2="160" y2="70"/>
+            <line x1="100" y1="100" x2="170" y2="130"/>
+            <line x1="100" y1="100" x2="130" y2="175"/>
+            <line x1="100" y1="100" x2="60" y2="175"/>
+            <line x1="100" y1="100" x2="30" y2="130"/>
+            <line x1="100" y1="100" x2="40" y2="70"/>
+            <line x1="100" y1="30" x2="160" y2="70"/>
+            <line x1="160" y1="70" x2="170" y2="130"/>
+            <line x1="40" y1="70" x2="30" y2="130"/>
+          </g>
+
+          <!-- Central bot (Arc / Gatekeeper) -->
+          <g transform="translate(100,100)" filter="url(#botFilter)">
+            <circle r="18" fill="#1a0a2e" stroke="#fbbf24" stroke-width="2"/>
+            <rect x="-7" y="-9" width="14" height="12" rx="2" fill="#7c3aed"/>
+            <circle cx="-3" cy="-4" r="2" fill="#fbbf24"/>
+            <circle cx="3" cy="-4" r="2" fill="#fbbf24"/>
+            <rect x="-5" y="1" width="10" height="2" rx="1" fill="#fbbf24" opacity="0.5"/>
+            <line x1="0" y1="-9" x2="0" y2="-14" stroke="#fbbf24" stroke-width="1.5" stroke-linecap="round"/>
+            <circle cx="0" cy="-15" r="2" fill="#fbbf24"/>
+            <text y="14" text-anchor="middle" font-size="7" fill="#fbbf24" font-weight="700">ARC</text>
+          </g>
+
+          <!-- Satellite bots -->
+          <!-- Top: Sparky -->
+          <g transform="translate(100,30)" filter="url(#botFilter)">
+            <circle r="12" fill="#1a0a2e" stroke="#fbbf24" stroke-width="1.5"/>
+            <circle cx="-3" cy="-2" r="1.5" fill="#fbbf24"/>
+            <circle cx="3" cy="-2" r="1.5" fill="#fbbf24"/>
+            <text y="8" text-anchor="middle" font-size="6" fill="#fbbf24">⚡</text>
+          </g>
+
+          <!-- Top-right: Blaze -->
+          <g transform="translate(160,70)" filter="url(#botFilter)">
+            <circle r="12" fill="#1a0a2e" stroke="#8b5cf6" stroke-width="1.5"/>
+            <circle cx="-3" cy="-2" r="1.5" fill="#8b5cf6"/>
+            <circle cx="3" cy="-2" r="1.5" fill="#8b5cf6"/>
+            <text y="8" text-anchor="middle" font-size="6" fill="#8b5cf6">🔥</text>
+          </g>
+
+          <!-- Right: Flux -->
+          <g transform="translate(170,130)" filter="url(#botFilter)">
+            <circle r="12" fill="#1a0a2e" stroke="#10b981" stroke-width="1.5"/>
+            <circle cx="-3" cy="-2" r="1.5" fill="#10b981"/>
+            <circle cx="3" cy="-2" r="1.5" fill="#10b981"/>
+            <text y="8" text-anchor="middle" font-size="6" fill="#10b981">💚</text>
+          </g>
+
+          <!-- Bottom-right: Gemini -->
+          <g transform="translate(130,175)" filter="url(#botFilter)">
+            <circle r="12" fill="#1a0a2e" stroke="#06b6d4" stroke-width="1.5"/>
+            <circle cx="-3" cy="-2" r="1.5" fill="#06b6d4"/>
+            <circle cx="3" cy="-2" r="1.5" fill="#06b6d4"/>
+            <text y="8" text-anchor="middle" font-size="6" fill="#06b6d4">🌀</text>
+          </g>
+
+          <!-- Bottom-left: Weld -->
+          <g transform="translate(60,175)" filter="url(#botFilter)">
+            <circle r="12" fill="#1a0a2e" stroke="#f59e0b" stroke-width="1.5"/>
+            <circle cx="-3" cy="-2" r="1.5" fill="#f59e0b"/>
+            <circle cx="3" cy="-2" r="1.5" fill="#f59e0b"/>
+            <text y="8" text-anchor="middle" font-size="6" fill="#f59e0b">🔧</text>
+          </g>
+
+          <!-- Left: Volt -->
+          <g transform="translate(30,130)" filter="url(#botFilter)">
+            <circle r="12" fill="#1a0a2e" stroke="#a78bfa" stroke-width="1.5"/>
+            <circle cx="-3" cy="-2" r="1.5" fill="#a78bfa"/>
+            <circle cx="3" cy="-2" r="1.5" fill="#a78bfa"/>
+            <text y="8" text-anchor="middle" font-size="6" fill="#a78bfa">⚡</text>
+          </g>
+
+          <!-- Top-left: Neon -->
+          <g transform="translate(40,70)" filter="url(#botFilter)">
+            <circle r="12" fill="#1a0a2e" stroke="#ec4899" stroke-width="1.5"/>
+            <circle cx="-3" cy="-2" r="1.5" fill="#ec4899"/>
+            <circle cx="3" cy="-2" r="1.5" fill="#ec4899"/>
+            <text y="8" text-anchor="middle" font-size="6" fill="#ec4899">💜</text>
+          </g>
+
+          <!-- Data pulse animations -->
+          <circle cx="100" cy="100" r="25" stroke="#7c3aed" stroke-width="1" fill="none" opacity="0.3">
+            <animate attributeName="r" values="18;40;18" dur="3s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" values="0.5;0;0.5" dur="3s" repeatCount="indefinite"/>
+          </circle>
+        </svg>
+      </div>
+
+      <div class="ai-text">
+        <div class="section-label">Powered By</div>
+        <h2>The MEGA Crew</h2>
+        <p>17 AI bots running 24/7 in Docker containers on a Pi 5. They analyze stream performance, surface community insights, write episode recaps, and coach the channel's growth — all without leaving the house.</p>
+        <p>The <code style="color:var(--amber-light);background:rgba(245,158,11,0.1);padding:2px 6px;border-radius:4px">!shanebrain</code> command routes through the same infrastructure that powers this entire ecosystem.</p>
+
+        <div class="ai-stats">
+          <div class="ai-stat">
+            <span class="num">17</span>
+            <span class="label">AI Bots</span>
+          </div>
+          <div class="ai-stat">
+            <span class="num">44</span>
+            <span class="label">MCP Tools</span>
+          </div>
+          <div class="ai-stat">
+            <span class="num">4</span>
+            <span class="label">Cluster Nodes</span>
+          </div>
+          <div class="ai-stat">
+            <span class="num">100%</span>
+            <span class="label">Local / Private</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SOCIAL LINKS -->
+<section>
+  <div class="container">
+    <div class="section-label">Find Us</div>
+    <h2>The Community</h2>
+    <p class="section-sub">The stream is the show. The Discord is where the community actually lives. Come hang.</p>
+
+    <div class="social-row">
+      <a href="https://twitch.tv/thebardchat" class="social-card twitch" target="_blank" rel="noopener">
+        <span class="social-icon">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="#9146ff"><path d="M2.149 0L.537 4.119v16.836h5.731V24h3.224l3.045-3.045h4.657l6.269-6.269V0H2.149zm19.164 13.612l-3.582 3.582H13.09l-3.045 3.045v-3.045H5.269V2.149h16.044v11.463zM13.582 4.716h2.149v6.448h-2.149zm-5.73 0h2.149v6.448H7.852z"/></svg>
+        </span>
+        <h3>Twitch</h3>
+        <p>twitch.tv/thebardchat<br>Follow for live notifications</p>
+      </a>
+
+      <a href="https://github.com/thebardchat" class="social-card github" target="_blank" rel="noopener">
+        <span class="social-icon">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="#fbbf24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+        </span>
+        <h3>GitHub</h3>
+        <p>thebardchat<br>All the code — open source</p>
+      </a>
+
+      <a href="https://www.amazon.com/Probably-Think-This-Book-About/dp/B0GT25R5FD" class="social-card" target="_blank" rel="noopener" style="border-color: rgba(245,158,11,0.2);">
+        <span class="social-icon">📖</span>
+        <h3>The Book</h3>
+        <p>"You Probably Think This Book Is About You"<br>Shane's noir vignette collection — on Amazon now</p>
+      </a>
+
+      <a href="https://claude.ai/referral/4fAMYN9Ing" class="social-card" target="_blank" rel="noopener" style="border-color: rgba(255,107,0,0.3);">
+        <span class="social-icon">🤖</span>
+        <h3>Try Claude</h3>
+        <p>The AI behind this entire ecosystem.<br>Free 2-week trial — no card required</p>
+      </a>
+    </div>
+
+    <!-- Claude referral block -->
+    <div class="claude-banner">
+      <div style="font-size:48px; flex-shrink:0;">✨</div>
+      <div class="claude-banner-text">
+        <strong>This channel runs on Claude + local AI.</strong>
+        <span>Every bot, every page, every system was built by Shane Brazelton and Claude (Anthropic) together. Try Claude free for two weeks and see what you can build.</span>
+      </div>
+      <a href="https://claude.ai/referral/4fAMYN9Ing" class="btn btn-claude" target="_blank" rel="noopener" style="flex-shrink:0;">
+        Start Free Trial →
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <p style="margin-bottom:12px; font-size:1rem; font-weight:600; color:var(--amber-light);">
+      Built by Shane Brazelton + Claude (Anthropic) — never "one guy built this."
+    </p>
+    <p style="margin-bottom:16px;">
+      Faith · Family · Sobriety · Local AI · The Left-Behind User
+    </p>
+    <p>
+      <a href="https://twitch.tv/thebardchat">Twitch</a> ·
+      <a href="https://github.com/thebardchat/twitch">GitHub</a> ·
+      <a href="https://github.com/thebardchat/twitch/blob/main/CONSTITUTION.md">Constitution</a> ·
+      <a href="https://claude.ai/referral/4fAMYN9Ing">Try Claude Free</a>
+    </p>
+    <p style="margin-top:16px; font-size:0.75rem; opacity:0.5;">
+      © 2026 thebardchat · twitch.tv/thebardchat · Hazel Green, AL
+    </p>
+  </div>
+</footer>
+
+<script>
+  // Generate floating particles for love-and-light ambiance
+  const bg = document.getElementById('bgStars');
+  const colors = ['#fbbf24','#8b5cf6','#f59e0b','#c4b8e0','#7c3aed'];
+  for (let i = 0; i < 40; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    const size = Math.random() * 4 + 1;
+    const color = colors[Math.floor(Math.random() * colors.length)];
+    const left = Math.random() * 100;
+    const duration = Math.random() * 15 + 10;
+    const delay = Math.random() * 15;
+    p.style.cssText = `
+      width:${size}px; height:${size}px;
+      left:${left}%;
+      background:${color};
+      opacity:0.6;
+      animation-duration:${duration}s;
+      animation-delay:-${delay}s;
+      box-shadow: 0 0 ${size * 2}px ${color};
+    `;
+    bg.appendChild(p);
+  }
+</script>
+
+</body>
+</html>
