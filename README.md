@@ -10,6 +10,8 @@
 
 [![Twitch](https://img.shields.io/badge/LIVE%20ON-Twitch-9146ff?style=for-the-badge&logo=twitch)](https://twitch.tv/thebardchat)
 [![GitHub Pages](https://img.shields.io/badge/Stream-Schedule-ff6b35?style=for-the-badge&logo=github)](https://thebardchat.github.io/twitch/)
+[![Constitution](https://img.shields.io/badge/Community-Constitution-7c3aed?style=for-the-badge&logo=scroll)](CONSTITUTION.md)
+[![Discord](https://img.shields.io/badge/Join-Discord-5865F2?style=for-the-badge&logo=discord)](https://discord.gg/thebardchat)
 [![Built with Claude](https://img.shields.io/badge/Built%20With-Claude%20AI-orange?style=for-the-badge)](https://claude.ai/referral/4fAMYN9Ing)
 
 ---
@@ -110,6 +112,23 @@ TWITCH_CHANNEL=thebardchat
 SHANEBRAIN_MCP_URL=http://localhost:8100/mcp
 DISCORD_WEBHOOK_URL=your_webhook
 ```
+
+---
+
+## Community Rules
+
+This channel runs on love and light — and that's non-negotiable. The short version:
+
+1. **No hate, no toxicity, no exceptions** — slurs, harassment, and dark energy get you removed
+2. **Family-friendly first** — kids watch this channel
+3. **Sobriety-safe space** — no glorifying alcohol or drug use
+4. **AI disclosure** — AI tools are welcome here, just say so
+5. **Respect the crew** — mods have final say, always
+6. **No unsolicited promos** — ask first
+
+**Read the full [CONSTITUTION.md](CONSTITUTION.md)** — Nine Pillars, moderation philosophy, AI disclosure policy, and amendment process. It's short and worth the read.
+
+The Discord lives here too: [`discord/README.md`](discord/README.md) — channels, roles, bot commands, and go-live alerts.
 
 ---
 
