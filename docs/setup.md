@@ -34,6 +34,7 @@ python3 scripts/env_from_vault.py --add TWITCH_CLIENT_SECRET=your_secret
 python3 scripts/env_from_vault.py --add TWITCH_OAUTH_TOKEN=oauth:your_token
 python3 scripts/env_from_vault.py --add TWITCH_CHANNEL=thebardchat
 python3 scripts/env_from_vault.py --add DISCORD_WEBHOOK_URL=your_webhook
+python3 scripts/env_from_vault.py --add ANTHROPIC_API_KEY=your_key
 ```
 
 ## Step 4 — Install Dependencies
@@ -48,7 +49,7 @@ pip install twitchio aiohttp --user --break-system-packages
 # /etc/systemd/system/twitch-bot.service
 [Unit]
 Description=thebardchat Twitch Bot
-After=network.target ollama.service
+After=network.target
 
 [Service]
 User=shanebrain
@@ -97,7 +98,6 @@ Get your user ID: `GET https://api.twitch.tv/helix/users?login=thebardchat`
 # /home/shanebrain/twitch/.env
 TWITCH_OAUTH_TOKEN=oauth:your_token
 TWITCH_CHANNEL=thebardchat
-SHANEBRAIN_MCP_URL=http://localhost:8100/mcp
-SHANEBRAIN_OLLAMA_URL=http://localhost:11435
+ANTHROPIC_API_KEY=your_key
 DISCORD_WEBHOOK_URL=https://discord.com/api/webhooks/...
 ```

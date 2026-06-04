@@ -1,6 +1,6 @@
 """
 thebardchat Twitch Chat Bot
-Powered by twitchio + ShaneBrain local AI (Ollama cluster via MCP)
+Powered by twitchio + Claude Haiku (Anthropic API)
 Deploy as systemd service 'twitch-bot' on Pi 5
 """
 import os
@@ -9,10 +9,9 @@ import aiohttp
 from datetime import datetime, date
 from twitchio.ext import commands
 
-TWITCH_TOKEN    = os.environ["TWITCH_OAUTH_TOKEN"]
-TWITCH_CHANNEL  = os.environ.get("TWITCH_CHANNEL", "thebardchat")
-MCP_URL         = os.environ.get("SHANEBRAIN_MCP_URL", "http://localhost:8100/mcp")
-OLLAMA_URL      = os.environ.get("SHANEBRAIN_OLLAMA_URL", "http://localhost:11435")
+TWITCH_TOKEN     = os.environ["TWITCH_OAUTH_TOKEN"]
+TWITCH_CHANNEL   = os.environ.get("TWITCH_CHANNEL", "thebardchat")
+ANTHROPIC_API_KEY = os.environ["ANTHROPIC_API_KEY"]
 SOBRIETY_START  = date(2023, 11, 27)
 COMMAND_COOLDOWN = 30  # global seconds between !shanebrain calls
 USER_COOLDOWN    = 10  # per-user seconds
@@ -61,7 +60,7 @@ class BardBot(commands.Bot):
         _user_cooldowns[ctx.author.name] = now
 
         try:
-            answer = await _ask_ollama(query)
+            answer = await _ask_claude(query)
             # Twitch chat max 500 chars
             if len(answer) > 430:
                 answer = answer[:427] + "..."
@@ -128,26 +127,31 @@ class BardBot(commands.Bot):
         )
 
 
-async def _ask_ollama(prompt: str) -> str:
-    """Send prompt to local Ollama cluster and return response."""
+async def _ask_claude(prompt: str) -> str:
+    """Send prompt to Claude Haiku and return a chat-length response."""
     payload = {
-        "model": "llama3.1:8b",
-        "prompt": (
-            "You are ShaneBrain, a helpful AI assistant built for a Twitch chat. "
-            "Keep answers under 350 characters. Be warm, helpful, and honest. "
-            f"Question: {prompt}"
+        "model": "claude-haiku-4-5-20251001",
+        "max_tokens": 120,
+        "system": (
+            "You are ShaneBrain, a warm and helpful AI assistant in a Twitch chat. "
+            "Keep every answer under 350 characters. Be honest, uplifting, and brief."
         ),
-        "stream": False,
-        "options": {"num_predict": 120},
+        "messages": [{"role": "user", "content": prompt}],
+    }
+    headers = {
+        "x-api-key": ANTHROPIC_API_KEY,
+        "anthropic-version": "2023-06-01",
+        "content-type": "application/json",
     }
     async with aiohttp.ClientSession() as session:
         async with session.post(
-            f"{OLLAMA_URL}/api/generate",
+            "https://api.anthropic.com/v1/messages",
             json=payload,
+            headers=headers,
             timeout=aiohttp.ClientTimeout(total=20),
         ) as resp:
             data = await resp.json()
-            return data.get("response", "I don't have an answer for that right now.").strip()
+            return data["content"][0]["text"].strip()
 
 
 if __name__ == "__main__":
