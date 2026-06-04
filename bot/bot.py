@@ -1,6 +1,6 @@
 """
 thebardchat Twitch Chat Bot
-Powered by twitchio + Claude Haiku (Anthropic API)
+Powered by twitchio — AI routed through ShaneBrain Gateway (port 4200)
 Deploy as systemd service 'twitch-bot' on Pi 5
 """
 import os
@@ -9,9 +9,10 @@ import aiohttp
 from datetime import datetime, date
 from twitchio.ext import commands
 
-TWITCH_TOKEN     = os.environ["TWITCH_OAUTH_TOKEN"]
-TWITCH_CHANNEL   = os.environ.get("TWITCH_CHANNEL", "thebardchat")
-ANTHROPIC_API_KEY = os.environ["ANTHROPIC_API_KEY"]
+TWITCH_TOKEN       = os.environ["TWITCH_OAUTH_TOKEN"]
+TWITCH_CHANNEL     = os.environ.get("TWITCH_CHANNEL", "thebardchat")
+GATEWAY_URL        = os.environ.get("SHANEBRAIN_GATEWAY_URL", "http://100.67.120.6:4200")
+BOT_INTERNAL_SECRET = os.environ["BOT_INTERNAL_SECRET"]
 SOBRIETY_START  = date(2023, 11, 27)
 COMMAND_COOLDOWN = 30  # global seconds between !shanebrain calls
 USER_COOLDOWN    = 10  # per-user seconds
@@ -60,7 +61,7 @@ class BardBot(commands.Bot):
         _user_cooldowns[ctx.author.name] = now
 
         try:
-            answer = await _ask_claude(query)
+            answer = await _ask_gateway(query)
             # Twitch chat max 500 chars
             if len(answer) > 430:
                 answer = answer[:427] + "..."
@@ -127,31 +128,17 @@ class BardBot(commands.Bot):
         )
 
 
-async def _ask_claude(prompt: str) -> str:
-    """Send prompt to Claude Haiku and return a chat-length response."""
-    payload = {
-        "model": "claude-haiku-4-5-20251001",
-        "max_tokens": 120,
-        "system": (
-            "You are ShaneBrain, a warm and helpful AI assistant in a Twitch chat. "
-            "Keep every answer under 350 characters. Be honest, uplifting, and brief."
-        ),
-        "messages": [{"role": "user", "content": prompt}],
-    }
-    headers = {
-        "x-api-key": ANTHROPIC_API_KEY,
-        "anthropic-version": "2023-06-01",
-        "content-type": "application/json",
-    }
+async def _ask_gateway(prompt: str) -> str:
+    """Route AI query through the ShaneBrain gateway /api/bot/chat."""
     async with aiohttp.ClientSession() as session:
         async with session.post(
-            "https://api.anthropic.com/v1/messages",
-            json=payload,
-            headers=headers,
-            timeout=aiohttp.ClientTimeout(total=20),
+            f"{GATEWAY_URL}/api/bot/chat",
+            json={"message": prompt, "context": "twitch"},
+            headers={"x-bot-secret": BOT_INTERNAL_SECRET},
+            timeout=aiohttp.ClientTimeout(total=25),
         ) as resp:
             data = await resp.json()
-            return data["content"][0]["text"].strip()
+            return data.get("response", "ShaneBrain is thinking — try again in a moment.")
 
 
 if __name__ == "__main__":
