@@ -1,0 +1,5 @@
+.env
+.golive_state.json
+.golive_token.json
+__pycache__/
+*.pyc
