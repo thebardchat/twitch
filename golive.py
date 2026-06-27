@@ -2,14 +2,17 @@
 """
 golive.py — announce thebardchat's Twitch go-live to Discord. Edge-triggered.
 
-Cron (every few min): polls Helix /streams via a cached app token. When the
-channel flips offline->live (or a new stream starts), posts an embed to Discord
-via the admin bot (ShaneBrainLegacyBot). State file dedupes so it announces ONCE
-per stream. Stdlib only.
+Cron (every few min): polls Helix /streams via a cached app token.
+  * offline->live: posts a LIVE embed to #announcements, pinging @Stream Squad
+    (falls back to @everyone if the squad role isn't set up).
+  * live->offline: posts a "stream ended" wrap-up embed with the VOD replay link,
+    and drops that replay into the Stream Squad channel as a member perk.
+State file dedupes so each transition fires once. Stdlib only.
 
   python3 golive.py                 # normal poll (cron)
-  python3 golive.py --dry-run       # do everything except post; print the embed
-  python3 golive.py --test          # force an announce (uses live data, or sample)
+  python3 golive.py --dry-run       # do everything except post; print the payloads
+  python3 golive.py --test          # force a LIVE announce (live data, or sample)
+  python3 golive.py --test --offline# force a wrap-up/VOD-drop (uses latest VOD)
 """
 import os
 import sys
@@ -91,15 +94,46 @@ def stream_status(cid, token, login):
     return data[0] if data else None
 
 
+def latest_vod(cid, token, user_id):
+    """Most recent archived VOD for the channel, or None (VODs can lag a minute)."""
+    if not user_id:
+        return None
+    st, res = _req("GET",
+                   f"https://api.twitch.tv/helix/videos?user_id={user_id}&type=archive&first=1",
+                   {"Client-Id": cid, "Authorization": f"Bearer {token}"})
+    if st != 200:
+        return None
+    data = res.get("data") or []
+    return data[0] if data else None
+
+
 def _squad_role_id():
-    """Return the Stream Squad role id from stream_squad.json, or None."""
+    """Stream Squad role id from stream_squad.json, or None."""
+    return _squad_get("role_id")
+
+
+def _squad_channel_id():
+    """Stream Squad private channel id from stream_squad.json, or None."""
+    return _squad_get("squad_channel_id")
+
+
+def _squad_get(key):
     try:
-        import json as _j
-        from pathlib import Path as _P
-        s = _j.loads((_P(__file__).resolve().parent / "stream_squad.json").read_text())
-        return s.get("role_id")
+        s = json.loads((HERE / "stream_squad.json").read_text())
+        return s.get(key)
     except Exception:
         return None
+
+
+def _discord_post(channel, payload, dtoken, label):
+    st, res = _req("POST", f"https://discord.com/api/v10/channels/{channel}/messages",
+                   {"Authorization": f"Bot {dtoken}", "Content-Type": "application/json",
+                    "User-Agent": "golive/1.0"}, payload)
+    if st in (200, 201):
+        print(f"{label} -> msg", res.get("id"))
+        return res.get("id")
+    print(f"{label} failed [{st}]: {res}")
+    return None
 
 
 def announce(stream, dtoken, dry=False):
@@ -120,16 +154,44 @@ def announce(stream, dtoken, dry=False):
         allowed = {"parse": ["everyone"]}
     payload = {"content": content, "embeds": [embed], "allowed_mentions": allowed}
     if dry:
-        print(json.dumps(payload, indent=2)[:1000])
+        print("[announce]", json.dumps(payload, indent=2)[:800])
         return None
-    st, res = _req("POST", f"https://discord.com/api/v10/channels/{ANNOUNCE_CHANNEL}/messages",
-                   {"Authorization": f"Bot {dtoken}", "Content-Type": "application/json",
-                    "User-Agent": "golive/1.0"}, payload)
-    if st in (200, 201):
-        print("announced -> msg", res.get("id"))
-        return res.get("id")
-    print(f"discord post failed [{st}]: {res}")
-    return None
+    return _discord_post(ANNOUNCE_CHANNEL, payload, dtoken, "announced")
+
+
+def wrap_up(last, vod, dtoken, dry=False):
+    """Post a 'stream ended' embed + drop the replay into the squad channel."""
+    title = (last.get("title") or "Stream")[:240]
+    vod_url = (vod or {}).get("url")
+    dur = (vod or {}).get("duration", "")
+    desc = "Thanks for hanging out \U0001F49B"
+    if vod_url:
+        desc += f"\n\n\U0001F4FA **Watch the replay:** {vod_url}"
+    else:
+        desc += "\n\nVOD is still processing — it'll be up on Twitch shortly."
+    embed = {"title": f"◼️ Stream ended — {title}"[:250],
+             "url": vod_url or TWITCH_URL, "color": 0x5C16C5,
+             "author": {"name": "thebardchat went offline"},
+             "description": desc}
+    if dur:
+        embed["footer"] = {"text": f"Streamed for {dur}"}
+    payload = {"embeds": [embed], "allowed_mentions": {"parse": []}}
+    if dry:
+        print("[wrap-up]", json.dumps(payload, indent=2)[:800])
+    else:
+        _discord_post(ANNOUNCE_CHANNEL, payload, dtoken, "wrap-up")
+
+    # squad perk: replay link dropped into the squad-only channel, pinging the role
+    role_id = _squad_role_id()
+    squad_chan = _squad_channel_id()
+    if squad_chan and vod_url:
+        ping = f"<@&{role_id}> " if role_id else ""
+        sp = {"content": f"{ping}\U0001F4FA Replay is up — **{title}**\n{vod_url}",
+              "allowed_mentions": {"roles": [role_id] if role_id else []}}
+        if dry:
+            print("[squad-drop]", json.dumps(sp)[:400])
+        else:
+            _discord_post(squad_chan, sp, dtoken, "squad VOD drop")
 
 
 def main():
@@ -146,17 +208,37 @@ def main():
     state = json.loads(STATE.read_text()) if STATE.exists() else {"live": False, "stream_id": None}
 
     if test:
-        announce(stream or {"title": "[TEST] thebardchat go-live wiring check",
-                            "game_name": "Just Chatting"}, dtoken, dry=dry)
+        if "--offline" in sys.argv:
+            uid = state.get("user_id") or (stream or {}).get("user_id")
+            vod = latest_vod(cid, tok, uid)
+            wrap_up(state if state.get("title") else {"title": "[TEST] wrap-up wiring check"},
+                    vod, dtoken, dry=dry)
+        else:
+            announce(stream or {"title": "[TEST] thebardchat go-live wiring check",
+                                "game_name": "Just Chatting"}, dtoken, dry=dry)
         return
 
     live = stream is not None
     sid = stream.get("id") if stream else None
+
     if live and (not state.get("live") or state.get("stream_id") != sid):
         announce(stream, dtoken, dry=dry)
+    if state.get("live") and not live:
+        vod = latest_vod(cid, tok, state.get("user_id"))
+        wrap_up(state, vod, dtoken, dry=dry)
+
     print(f"live={live} stream_id={sid} (was live={state.get('live')})")
     if not dry:
-        STATE.write_text(json.dumps({"live": live, "stream_id": sid}))
+        if live:
+            STATE.write_text(json.dumps({
+                "live": True, "stream_id": sid,
+                "user_id": stream.get("user_id"),
+                "title": stream.get("title"),
+                "game": stream.get("game_name"),
+                "started_at": stream.get("started_at"),
+            }))
+        else:
+            STATE.write_text(json.dumps({"live": False, "stream_id": None}))
 
 
 if __name__ == "__main__":

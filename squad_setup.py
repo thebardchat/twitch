@@ -40,13 +40,21 @@ API = "https://discord.com/api/v10"
 
 MANAGE_ROLES = 1 << 28
 ADMIN        = 1 << 3
+VIEW_CHANNEL = 1 << 10
+SQUAD_CHANNEL_NAME = os.environ.get("DISCORD_SQUAD_CHANNEL_NAME", "stream-squad")
 
-OPTIN_TEXT = (
-    "**\U0001F514 Join the Stream Squad**\n"
-    "React with \U0001F514 below to get pinged when **thebardchat** goes live on "
-    f"Twitch - {TWITCH_URL}\n"
-    "Remove your \U0001F514 anytime to stop the pings. (No more @everyone.)"
-)
+
+def optin_embed():
+    return {
+        "title": "\U0001F514 Join the Stream Squad",
+        "color": ROLE_COLOR,
+        "description": (
+            "React with \U0001F514 below to get pinged when **thebardchat** goes live on "
+            f"Twitch - {TWITCH_URL}\n\n"
+            "You'll also get replay links in the squad channel after each stream. "
+            "Remove your \U0001F514 anytime to leave. (No more @everyone.)"
+        ),
+    }
 
 
 def envget(path, key):
@@ -111,20 +119,60 @@ def ensure_role():
     return created["id"], True
 
 
+def _pin(message_id):
+    try:
+        api("PUT", f"/channels/{OPTIN_CHAN}/pins/{message_id}", expect_json=False)
+    except urllib.error.HTTPError:
+        pass
+
+
 def ensure_optin_message(state):
+    emj = urllib.parse.quote(EMOJI)
     mid = state.get("message_id")
     if mid:
         try:
             api("GET", f"/channels/{OPTIN_CHAN}/messages/{mid}")
+            # upgrade in place to the pinned embed form + ensure the bot's reaction
+            api("PATCH", f"/channels/{OPTIN_CHAN}/messages/{mid}",
+                {"content": "", "embeds": [optin_embed()]})
+            api("PUT", f"/channels/{OPTIN_CHAN}/messages/{mid}/reactions/{emj}/@me",
+                expect_json=False)
+            _pin(mid)
             return mid, False
         except urllib.error.HTTPError as e:
             if e.code != 404:
                 raise
-    msg = api("POST", f"/channels/{OPTIN_CHAN}/messages", {"content": OPTIN_TEXT})
-    emj = urllib.parse.quote(EMOJI)
+    msg = api("POST", f"/channels/{OPTIN_CHAN}/messages", {"embeds": [optin_embed()]})
     api("PUT", f"/channels/{OPTIN_CHAN}/messages/{msg['id']}/reactions/{emj}/@me",
         expect_json=False)
+    _pin(msg["id"])
     return msg["id"], True
+
+
+def ensure_squad_channel(role_id, state):
+    """A text channel only the Stream Squad role (and admins) can see."""
+    cid = state.get("squad_channel_id")
+    if cid:
+        try:
+            api("GET", f"/channels/{cid}")
+            return cid, False
+        except urllib.error.HTTPError as e:
+            if e.code != 404:
+                raise
+    overwrites = [
+        {"id": GUILD_ID, "type": 0, "deny": str(VIEW_CHANNEL), "allow": "0"},  # @everyone hidden
+        {"id": role_id,  "type": 0, "allow": str(VIEW_CHANNEL), "deny": "0"},  # Stream Squad sees it
+    ]
+    ch = api("POST", f"/guilds/{GUILD_ID}/channels",
+             {"name": SQUAD_CHANNEL_NAME, "type": 0,
+              "topic": "\U0001F514 Stream Squad HQ - go-live pings & VOD replays. "
+                       "Opt in via the 🔔 in #announcements.",
+              "permission_overwrites": overwrites})
+    api("POST", f"/channels/{ch['id']}/messages",
+        {"content": f"<@&{role_id}> welcome to the **Stream Squad** \U0001F514 - "
+                    "replay links land here after every stream.",
+         "allowed_mentions": {"roles": [role_id]}})
+    return ch["id"], True
 
 
 def reactors(message_id):
@@ -205,8 +253,13 @@ def main():
     print(f"[optin] message id={message_id} "
           f"({'posted' if msg_new else 'existing'}) in channel {OPTIN_CHAN}")
 
+    squad_chan_id, chan_new = ensure_squad_channel(role_id, state)
+    print(f"[channel] #{SQUAD_CHANNEL_NAME} id={squad_chan_id} "
+          f"({'created' if chan_new else 'existing'})")
+
     state.update({"role_id": role_id, "guild_id": GUILD_ID,
-                  "message_id": message_id, "channel_id": OPTIN_CHAN, "emoji": EMOJI})
+                  "message_id": message_id, "channel_id": OPTIN_CHAN, "emoji": EMOJI,
+                  "squad_channel_id": squad_chan_id})
     save_state(state)
 
     added, removed = sync(role_id, message_id, remove=not no_remove)
