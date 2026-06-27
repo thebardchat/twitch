@@ -29,6 +29,7 @@ DISCORD_ENV = Path("/mnt/shanebrain-raid/shanebrain-core/bot/.env")
 STATE = HERE / ".golive_state.json"
 TOKCACHE = HERE / ".golive_token.json"
 ANNOUNCE_CHANNEL = os.environ.get("DISCORD_GOLIVE_CHANNEL", "1103685981263110296")  # #announcements
+GUILD_ID = os.environ.get("DISCORD_GUILD", "1103685980633972819")
 TWITCH_URL = "https://twitch.tv/thebardchat"
 
 
@@ -194,6 +195,40 @@ def wrap_up(last, vod, dtoken, dry=False):
             _discord_post(squad_chan, sp, dtoken, "squad VOD drop")
 
 
+def create_event(stream, dtoken, dry=False):
+    """Create a Discord Scheduled Event pointing at the Twitch stream."""
+    import datetime
+    now = datetime.datetime.now(datetime.timezone.utc)
+    start = (now + datetime.timedelta(seconds=60)).strftime("%Y-%m-%dT%H:%M:%S+00:00")
+    end = (now + datetime.timedelta(hours=4)).strftime("%Y-%m-%dT%H:%M:%S+00:00")
+    body = {"name": (stream.get("title") or "thebardchat LIVE")[:100],
+            "privacy_level": 2, "scheduled_start_time": start, "scheduled_end_time": end,
+            "entity_type": 3, "entity_metadata": {"location": TWITCH_URL},
+            "description": f"Live on Twitch — {TWITCH_URL}"[:1000]}
+    if dry:
+        print("[event create]", json.dumps(body)[:400])
+        return None
+    st, res = _req("POST", f"https://discord.com/api/v10/guilds/{GUILD_ID}/scheduled-events",
+                   {"Authorization": f"Bot {dtoken}", "Content-Type": "application/json",
+                    "User-Agent": "golive/1.0"}, body)
+    if st in (200, 201):
+        print("event created ->", res.get("id"))
+        return res.get("id")
+    print(f"event create failed [{st}]: {res}")
+    return None
+
+
+def end_event(event_id, dtoken, dry=False):
+    if not event_id:
+        return
+    if dry:
+        print("[event end] would delete", event_id)
+        return
+    st, _ = _req("DELETE", f"https://discord.com/api/v10/guilds/{GUILD_ID}/scheduled-events/{event_id}",
+                 {"Authorization": f"Bot {dtoken}", "User-Agent": "golive/1.0"})
+    print(f"event ended [{st}]")
+
+
 def main():
     dry = "--dry-run" in sys.argv
     test = "--test" in sys.argv
@@ -220,14 +255,20 @@ def main():
 
     live = stream is not None
     sid = stream.get("id") if stream else None
+    event_id = state.get("event_id")
 
     if live and (not state.get("live") or state.get("stream_id") != sid):
         announce(stream, dtoken, dry=dry)
+        new_eid = create_event(stream, dtoken, dry=dry)
+        if new_eid:
+            event_id = new_eid
     if state.get("live") and not live:
         vod = latest_vod(cid, tok, state.get("user_id"))
         wrap_up(state, vod, dtoken, dry=dry)
+        end_event(state.get("event_id"), dtoken, dry=dry)
+        event_id = None
 
-    print(f"live={live} stream_id={sid} (was live={state.get('live')})")
+    print(f"live={live} stream_id={sid} (was live={state.get('live')}) event={event_id}")
     if not dry:
         if live:
             STATE.write_text(json.dumps({
@@ -236,6 +277,7 @@ def main():
                 "title": stream.get("title"),
                 "game": stream.get("game_name"),
                 "started_at": stream.get("started_at"),
+                "event_id": event_id,
             }))
         else:
             STATE.write_text(json.dumps({"live": False, "stream_id": None}))
