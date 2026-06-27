@@ -91,6 +91,17 @@ def stream_status(cid, token, login):
     return data[0] if data else None
 
 
+def _squad_role_id():
+    """Return the Stream Squad role id from stream_squad.json, or None."""
+    try:
+        import json as _j
+        from pathlib import Path as _P
+        s = _j.loads((_P(__file__).resolve().parent / "stream_squad.json").read_text())
+        return s.get("role_id")
+    except Exception:
+        return None
+
+
 def announce(stream, dtoken, dry=False):
     title = (stream.get("title") or "Live now!")[:240]
     game = stream.get("game_name") or ""
@@ -100,7 +111,14 @@ def announce(stream, dtoken, dry=False):
              "description": (f"**{game}**\n\n" if game else "") + f"Come hang out \U0001F49B  {TWITCH_URL}"}
     if thumb:
         embed["image"] = {"url": thumb}
-    payload = {"content": f"@everyone  thebardchat is now LIVE — {TWITCH_URL}", "embeds": [embed], "allowed_mentions": {"parse": ["everyone"]}}
+    role_id = _squad_role_id()
+    if role_id:
+        content = f"<@&{role_id}>  thebardchat is now LIVE — {TWITCH_URL}"
+        allowed = {"roles": [role_id]}
+    else:
+        content = f"@everyone  thebardchat is now LIVE — {TWITCH_URL}"
+        allowed = {"parse": ["everyone"]}
+    payload = {"content": content, "embeds": [embed], "allowed_mentions": allowed}
     if dry:
         print(json.dumps(payload, indent=2)[:1000])
         return None

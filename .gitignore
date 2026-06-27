@@ -3,3 +3,5 @@
 .golive_token.json
 __pycache__/
 *.pyc
+stream_squad.json
+*.bak-squad
