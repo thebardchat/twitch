@@ -1,6 +1,8 @@
 *.bak-*
 *.bak-squad
+.discord_invite.json
 .env
+.follower_state.json
 .golive_state.json
 .golive_token.json
 *.pyc

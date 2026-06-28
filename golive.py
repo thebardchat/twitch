@@ -26,6 +26,8 @@ from pathlib import Path
 HERE = Path("/home/shanebrain/twitch")
 ENVF = HERE / ".env"
 DISCORD_ENV = Path("/mnt/shanebrain-raid/shanebrain-core/bot/.env")
+MAIN_ENV = Path("/mnt/shanebrain-raid/shanebrain-core/.env")
+INVITE_CACHE = HERE / ".discord_invite.json"
 STATE = HERE / ".golive_state.json"
 TOKCACHE = HERE / ".golive_token.json"
 ANNOUNCE_CHANNEL = os.environ.get("DISCORD_GOLIVE_CHANNEL", "1103685981263110296")  # #announcements
@@ -137,6 +139,96 @@ def _discord_post(channel, payload, dtoken, label):
     return None
 
 
+def ensure_discord_invite(dtoken, channel=None):
+    """Return a cached permanent discord.gg invite, creating one if needed."""
+    if INVITE_CACHE.exists():
+        try:
+            return json.loads(INVITE_CACHE.read_text()).get("url")
+        except Exception:
+            pass
+    ch = channel or ANNOUNCE_CHANNEL
+    st, res = _req("POST", f"https://discord.com/api/v10/channels/{ch}/invites",
+                   {"Authorization": f"Bot {dtoken}", "Content-Type": "application/json",
+                    "User-Agent": "golive/1.0"},
+                   {"max_age": 0, "max_uses": 0, "unique": False})
+    if st in (200, 201) and res.get("code"):
+        url = f"https://discord.gg/{res['code']}"
+        try:
+            INVITE_CACHE.write_text(json.dumps({"url": url}))
+        except Exception:
+            pass
+        return url
+    print(f"invite create failed [{st}]: {res}")
+    return None
+
+
+def twitch_say(message):
+    """Send one PRIVMSG to the broadcaster's own Twitch chat via IRC (chat:edit)."""
+    import socket
+    oauth = envget(ENVF, "TWITCH_OAUTH_TOKEN") or ""
+    if not oauth.startswith("oauth:"):
+        oauth = "oauth:" + oauth
+    chan = (envget(ENVF, "TWITCH_CHANNEL") or "thebardchat").lower()
+    try:
+        s = socket.create_connection(("irc.chat.twitch.tv", 6667), timeout=10)
+        s.settimeout(10)
+        s.sendall(f"PASS {oauth}\r\nNICK {chan}\r\n".encode())
+        buf = b""
+        ok = False
+        for _ in range(12):
+            try:
+                data = s.recv(4096)
+            except socket.timeout:
+                break
+            if not data:
+                break
+            buf += data
+            if b" 001 " in buf:
+                ok = True
+                break
+            if b"Login authentication failed" in buf:
+                print("twitch chat: auth failed")
+                s.close()
+                return False
+        if ok:
+            s.sendall(f"JOIN #{chan}\r\n".encode())
+            time.sleep(0.4)
+            s.sendall(f"PRIVMSG #{chan} :{message}\r\n".encode())
+            time.sleep(0.4)
+            print("twitch chat: sent")
+        s.close()
+        return ok
+    except Exception as e:
+        print("twitch chat error:", e)
+        return False
+
+
+def dm_owner(text, dtoken):
+    owner = envget(MAIN_ENV, "DISCORD_OWNER_ID")
+    if not owner:
+        return
+    st, dm = _req("POST", "https://discord.com/api/v10/users/@me/channels",
+                  {"Authorization": f"Bot {dtoken}", "Content-Type": "application/json",
+                   "User-Agent": "golive/1.0"}, {"recipient_id": owner})
+    if st in (200, 201) and isinstance(dm, dict):
+        _discord_post(dm["id"], {"content": text[:1900]}, dtoken, "owner DM")
+
+
+def crosspost_live(stream, dtoken, dry=False):
+    """Beyond-Discord: shout into Twitch chat + DM the owner that we're live."""
+    invite = ensure_discord_invite(dtoken)
+    title = (stream.get("title") or "")[:80]
+    chat_msg = "\U0001F534 We're LIVE!" + (f" {title}" if title else "")
+    if invite:
+        chat_msg += f"  Join the Discord → {invite}"
+    if dry:
+        print("[twitch-chat]", chat_msg)
+        print("[owner-dm]", f"\U0001F534 You're live on Twitch: {title or TWITCH_URL}")
+        return
+    twitch_say(chat_msg)
+    dm_owner(f"\U0001F534 You're live on Twitch: {title or TWITCH_URL}\n{TWITCH_URL}", dtoken)
+
+
 def announce(stream, dtoken, dry=False):
     title = (stream.get("title") or "Live now!")[:240]
     game = stream.get("game_name") or ""
@@ -243,14 +335,17 @@ def main():
     state = json.loads(STATE.read_text()) if STATE.exists() else {"live": False, "stream_id": None}
 
     if test:
+        sample = stream or {"title": "[TEST] thebardchat go-live wiring check",
+                            "game_name": "Just Chatting"}
         if "--offline" in sys.argv:
             uid = state.get("user_id") or (stream or {}).get("user_id")
             vod = latest_vod(cid, tok, uid)
             wrap_up(state if state.get("title") else {"title": "[TEST] wrap-up wiring check"},
                     vod, dtoken, dry=dry)
+        elif "--shout" in sys.argv:
+            crosspost_live(sample, dtoken, dry=dry)
         else:
-            announce(stream or {"title": "[TEST] thebardchat go-live wiring check",
-                                "game_name": "Just Chatting"}, dtoken, dry=dry)
+            announce(sample, dtoken, dry=dry)
         return
 
     live = stream is not None
@@ -262,6 +357,7 @@ def main():
         new_eid = create_event(stream, dtoken, dry=dry)
         if new_eid:
             event_id = new_eid
+        crosspost_live(stream, dtoken, dry=dry)
     if state.get("live") and not live:
         vod = latest_vod(cid, tok, state.get("user_id"))
         wrap_up(state, vod, dtoken, dry=dry)
